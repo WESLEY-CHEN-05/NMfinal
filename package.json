@@ -1,0 +1,10 @@
+{
+  "type": "module",
+  "dependencies": {
+    "did-jwt": "^8.0.4",
+    "dids": "^5.0.2",
+    "key-did-provider-ed25519": "^4.0.2",
+    "key-did-provider-secp256k1": "^1.0.1",
+    "key-did-resolver": "^4.0.0"
+  }
+}
