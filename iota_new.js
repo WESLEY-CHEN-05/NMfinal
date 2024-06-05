@@ -32,13 +32,13 @@ const secretManager = {
   secret: "your-iota-secret-key" // Replace this with your actual secret key or appropriate secret manager
 };
 
-async function generateNewAddress(client) {
-  const address = await client.generateAddresses(
-    secretManager,
-    { startIndex: 0, count: 1, bech32: true }
-  );
-  return address[0];
-}
+// async function generateNewAddress(client) {
+//   const address = await client.generateAddresses(
+//     secretManager,
+//     { startIndex: 0, count: 1, bech32: true }
+//   );
+//   return address[0];
+// }
 
 /** Demonstrate how to create a DID Document. */
 async function main() {
@@ -81,21 +81,21 @@ async function main() {
 
   console.log(`Created document before resolve: `, JSON.stringify(document.toJSON(), null, 2));
 
-  const address = await generateNewAddress(didClient); // Awaiting this function
+//   const address = await generateNewAddress(didClient); // Awaiting this function
 
-  // Create a new DID AliasOutput
-  const aliasOutput = await didClient.newDidOutput(address, document);
+//   // Create a new DID AliasOutput
+//   const aliasOutput = await didClient.newDidOutput(address, document);
 
-  // Publish the DID Document
-  const publishedDocument = await didClient.publishDidOutput(secretManager, aliasOutput);
+//   // Publish the DID Document
+//   const publishedDocument = await didClient.publishDidOutput(secretManager, aliasOutput);
 
-  console.log(`Published document: `, JSON.stringify(publishedDocument.toJSON(), null, 2));
+//   console.log(`Published document: `, JSON.stringify(publishedDocument.toJSON(), null, 2));
 
-  // Fetching the published DID Document from the network to display it.
-  const did = publishedDocument.id().toString();
-  const resolvedDocument = await didClient.resolveDid(did);
+//   // Fetching the published DID Document from the network to display it.
+//   const did = publishedDocument.id().toString();
+//   const resolvedDocument = await didClient.resolveDid(did);
 
-  console.log(`Resolved document: `, JSON.stringify(resolvedDocument.toJSON(), null, 2));
+//   console.log(`Resolved document: `, JSON.stringify(resolvedDocument.toJSON(), null, 2));
 }
 
 main();
