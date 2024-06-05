@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Avatar, Button, IconButton, CssBaseline, TextField, FormControlLabel, 
-  Checkbox, Link, Paper, Box, Grid, Typography, Snackbar, Alert } from '@mui/material';
+import { Avatar, Button, IconButton, CssBaseline, TextField, FormControl, InputLabel, 
+  Select, Link, Paper, Box, Grid, Typography, Snackbar, Alert, MenuItem } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { ThemeProvider } from '@mui/material/styles';
 import { lightTheme, darkTheme } from "../Theme";
 import { usePage } from '../hooks/usePage';
+import taxiImg from '../img/taxi.png'
 //import { useSignIn } from '../Utilities/sign';
 //import { usePassword } from '../Utilities/usePassword';
 
@@ -33,6 +34,7 @@ export default function SignInSide() {
   const [wrong, setWrong] = useState(false);
   const [forget, setForget] = useState(false);
   const [emailField,setEmailField] = useState("");
+  const [identity, setIdentity] = useState("");
 
   //const {missPassword} = usePassword();
 
@@ -76,6 +78,7 @@ export default function SignInSide() {
   // React.useEffect(()=>{
 
   // },[fpr])
+  
 
   return (
     <ThemeProvider theme={localStorage.getItem('theme mode') === 'dark'? darkTheme : lightTheme}>
@@ -89,23 +92,9 @@ export default function SignInSide() {
           {errorMessage}
         </Alert>
       </Snackbar>
-      <Grid container component="main" sx={{ height: '100vh' }}>
-        <CssBaseline />
-        <Grid
-          item
-          xs={false}
-          sm={4}
-          md={7}
-          sx={{
-            backgroundImage: 'url(https://source.unsplash.com/random)',
-            backgroundRepeat: 'no-repeat',
-            backgroundColor: (t) =>
-              t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
-        />
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+      <CssBaseline />
+      <Grid container component="main" sx={{ height: '100vh', backgroundImage: `url(${taxiImg})` }} justifyContent='center' >
+        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} sx={{opacity:0.8}} square>
           <Box
             sx={{
               my: 8,
@@ -116,10 +105,14 @@ export default function SignInSide() {
             }}
           >
             <IconButton 
-              sx={{position: 'fixed', right:20, top: 20, boxShadow: 3 }}
+              sx={{position: 'fixed', right:20, top: 20, boxShadow: 3, bgcolor: 'white', 
+              '&:hover': {
+                bgcolor: 'white',
+                opacity: 0.8,
+              }, }}
               onClick={() => navigate(-1)}
             >
-              <ArrowBackIcon />
+              <ArrowBackIcon sx={{color: 'black'}}/>
             </IconButton>
             <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
               <LockOutlinedIcon />
@@ -127,7 +120,20 @@ export default function SignInSide() {
             <Typography component="h1" variant="h5">
               Sign in
             </Typography>
-            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1, width: '80%' }}>
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Identity</InputLabel>
+                <Select
+                  labelId="select-label"
+                  id="select"
+                  label="Identity"
+                  value={identity}
+                  onChange={(event) => setIdentity(event.target.value)}
+                >
+                  <MenuItem value='passenger'>乘客</MenuItem>
+                  <MenuItem value='driver'>司機</MenuItem>
+                </Select>
+              </FormControl>
               <TextField
                 margin="normal"
                 required
@@ -158,14 +164,14 @@ export default function SignInSide() {
               >
                 Sign In
               </Button>
-              <Grid container>
+              <Grid container color='text'>
                 <Grid item xs>
-                  <Link href="#" variant="body2" onClick={handleForget}>
+                  <Link href="#" variant="body2" onClick={handleForget} color="inherit">
                     Forgot password?
                   </Link>
                 </Grid>
-                <Grid item>
-                  <Link href="./sign_up" variant="body2">
+                <Grid item >
+                  <Link href="./sign_up" variant="body2" color="inherit" >
                     {"Don't have an account? Sign Up"}
                   </Link>
                 </Grid>
