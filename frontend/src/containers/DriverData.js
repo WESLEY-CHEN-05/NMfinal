@@ -16,26 +16,28 @@ const columns = [
     field: 'age',
     headerName: '年齡',
     type: 'number',
-    width: 110,
+    width: 150,
+    headerAlign: 'left',
+    align:'left'
   },
   {
     field: 'time',
     headerName: '認證時間',
-    type: 'number',
+    type: 'date',
     width: 110,
   }
 ];
 
 const rows = [
-  { id: 1, name: 'Jon', age: 14, time: '2002' },
-  { id: 2, name: 'Cersei', age: 31, time: '1999' },
-  { id: 3, name: 'Jaime', age: 31, time: '2000' },
-  { id: 4, name: 'Arya', age: 11, time: '2000' },
-  { id: 5, name: 'Daenerys', age: null, time: '2000' },
-  { id: 6, name: null, age: 150, time: '2000' },
-  { id: 7, name: 'Ferrara', age: 44, time: '2000' },
-  { id: 8, name: 'Rossini', age: 36, time: '2000' },
-  { id: 9, name: 'Harvey', age: 65, time: '2000' },
+  { id: 1, name: 'Jon', age: 14, time: new Date(2013, 2, 1) },
+  { id: 2, name: 'Cersei', age: 31, time: new Date(2013, 2, 1) },
+  { id: 3, name: 'Jaime', age: 31, time: new Date(2013, 3, 1) },
+  { id: 4, name: 'Arya', age: 11, time: new Date(2013, 12, 1) },
+  { id: 5, name: 'Daenerys', age: null, time: new Date(2013, 2, 11) },
+  { id: 6, name: null, age: 150, time: new Date(2013, 6, 7) },
+  { id: 7, name: 'Ferrara', age: 44, time: new Date(2013, 3, 1) },
+  { id: 8, name: 'Rossini', age: 36, time: new Date(2013, 2, 1) },
+  { id: 9, name: 'Harvey', age: 65, time: new Date(2013, 2, 1) },
 ];
 
 export default function DriverData() {

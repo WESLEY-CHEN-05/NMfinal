@@ -28,8 +28,8 @@ function HomePage() {
         </Typography>
         <Grid container spacing={2} sx={{justifyContent: 'space-between', marginTop: '20px'}}>
           {
-            functionBlocks.map(block => (
-              <Grid item lg={3} xs={12} align='center'>
+            functionBlocks.map((block, id) => (
+              <Grid key={id} item lg={3} xs={12} align='center'>
                 <FunctionBlock 
                   title={block.title} 
                   to={block.to}
