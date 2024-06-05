@@ -126,6 +126,7 @@ export default function SignInSide() {
                 <Select
                   labelId="select-label"
                   id="select"
+                  name="identity"
                   label="Identity"
                   value={identity}
                   onChange={(event) => setIdentity(event.target.value)}

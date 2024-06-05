@@ -31,16 +31,23 @@ export default function SignUp() {
   const [wrong, setWrong] = useState(false);
   const [identity, setIdentity] = useState('');
 
-  const handleSubmit = async (event) => {/*
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-
+    console.log({
+      identity: data.get("identity"),
+      firstName: data.get("firstName"),
+      lastName: data.get("lastName"),
+      email: data.get("email"),
+      password: data.get("password")
+    });
     if (data.get("firstName") === ''|| data.get("lastName") === '' || 
       data.get("email") === '' || data.get("password") === '') {
       setErrorMessage("All fields must be filled!")
       setWrong(true);
       return;
     }
+    /*
     const { state, err, type } = await signUp(data.get("firstName"), data.get("lastName"), data.get("email"), data.get("password"));
     if (state === 'success') navigate('/sign_in');
     else if (type === 'USED-EMAIL') {
@@ -87,6 +94,7 @@ export default function SignUp() {
                   <Select
                     labelId="select-label"
                     id="select"
+                    name="identity"
                     label="Identity"
                     value={identity}
                     onChange={(event) => setIdentity(event.target.value)}
