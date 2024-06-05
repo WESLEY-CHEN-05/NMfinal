@@ -28,7 +28,8 @@ async function resolveDID(didstring) {
   const did = new DID({ resolver: getResolver() });
   try {
     const doc = await did.resolve(didstring);
-    console.log(JSON.stringify(doc, null, 2));
+    console.log("LALA", doc.didDocument.verificationMethod);
+    // console.log(JSON.stringify(doc, null, 2));
     return doc;
   } catch (error) {
     console.error("Error generated when resolving DID: ", error);
@@ -65,8 +66,8 @@ async function updateDID(didString) {
   // console.log('Signed DID Document Update:', signedUpdate);
   
   // return signedUpdate;
-  console.log("Update Result:");
-  console.log(updatedDoc);
+  // console.log("Update Result:");
+  // console.log(updatedDoc);
   return updatedDoc;
 }
 
