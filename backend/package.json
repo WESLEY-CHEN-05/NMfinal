@@ -1,0 +1,30 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "server": "nodemon src/server.js --ext js graphql --exec babel-node",
+    "deploy": "NODE_ENV=production @babel/node src/server.js",
+    "deploy-win": "set NODE_ENV=production&& @babel/node src/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@graphql-yoga/node": "^3.9.1",
+    "dotenv": "^16.4.5",
+    "dotenv-defaults": "^5.0.2",
+    "express": "^4.19.2",
+    "graphql-yoga": "^5.3.1",
+    "mongoose": "^8.4.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.24.7",
+    "@babel/core": "^7.24.7",
+    "@babel/node": "^7.24.7",
+    "@babel/preset-env": "^7.24.7",
+    "nodemon": "^3.1.3"
+  }
+}

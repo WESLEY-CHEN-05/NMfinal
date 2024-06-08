@@ -4,13 +4,19 @@ import { ThemeProvider } from '@mui/material/styles';
 import { usePage } from '../hooks/usePage';
 import CustomizedAppBar from '../components/CustomizedAppBar';
 import FunctionBlock from '../components/FunctionBlock';
+import carRentalImg from '../img/car_rental.jpg'
+import carRentalImg2 from '../img/car_rental2.jpg'
+import driverDataImg from '../img/driver_data.png'
+import driverDataImg2 from '../img/driver_data2.png'
+import rentalRecordImg from '../img/rental_record.png'
+import rentalRecordImg2 from '../img/rental_record2.png'
 
 function HomePage() {
   const { theme } = usePage();
   const functionBlocks = [
-    {title: '租車', to: '/driver_data'},
-    {title: '司機資料', to: '/driver_data'},
-    {title: '租借紀錄', to: '/history'}
+    {title: '租車', to: '/driver_data', image: carRentalImg2},
+    {title: '司機\n資料', to: '/driver_data', image: driverDataImg2},
+    {title: '租借\n紀錄', to: '/history', image: rentalRecordImg2}
   ]
   return (
     <ThemeProvider theme={theme}>
@@ -19,8 +25,8 @@ function HomePage() {
       <CustomizedAppBar/>
 
       {/* main content */}
-      <Container sx={{ marginTop: '20px' }}>
-        <Typography variant="h2" align='center' gutterBottom>
+      <Container maxWidth='md' sx={{ marginTop: '80px' }}>
+        <Typography variant="h3" align='center' gutterBottom>
           Welcome to DID Taxi Service
         </Typography>
         <Typography variant="body1" align='center' gutterBottom>
@@ -33,7 +39,8 @@ function HomePage() {
                 <FunctionBlock 
                   title={block.title} 
                   to={block.to}
-                  color={theme.palette.mode==='light'? '#6DE44C':'#1DA14C'}
+                  image={block.image}
+                  color={'transparent'}
                 />
               </Grid>
             ))

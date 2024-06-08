@@ -1,0 +1,14 @@
+type Driver {
+  id: ID!
+  firstName: String!
+  lastName: Int!
+}
+
+type Query {
+  getPeople: [Person!]!
+  getPerson(id: ID!): Person
+}
+
+type Mutation {
+  addPerson(firstName: String!, lastName: String!): Person
+}

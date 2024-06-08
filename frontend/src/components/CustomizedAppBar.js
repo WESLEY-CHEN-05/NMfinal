@@ -8,7 +8,7 @@ const CustomizedAppBar = () => {
   const navigate = useNavigate();
 
   return (
-    <AppBar position="static">
+    <AppBar position="fixed">
       <Toolbar>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           DID Taxi Service
