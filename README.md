@@ -18,7 +18,7 @@ npm install
 ### Environment setting
 Create an `.env` file (see `.env.example`). 
 - `MNEMONIC`: fill a valid mnemonic. (see [how to generate](#mnemonic_generate.js))
-- `STRONGHOLD_PASSWORD`: fill in your strong
+- `STRONGHOLD_PASSWORD`: fill in your stronghold password.
 
 ### Run scripts
 Simply run following command (modify `***.js` to the scripts you want to run).
