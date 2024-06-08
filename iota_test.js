@@ -1,6 +1,6 @@
 import { writeFileSync, existsSync } from 'fs';
 
-import pkg from '@iota/client';
+import pkg from '@iota/sdk';
 const { Client, initLogger, StrongholdSecretManager, SecretManager } = pkg;
 
 const API_ENDPOINT = "http://140.112.18.206:14265";
@@ -26,6 +26,7 @@ async function run() {
         }
     };
 
+
     try {
         // 检查 Stronghold 文件是否存在，并且如果不存在则创建一个新的 Stronghold 文件
         if (!existsSync(strongholdPath)) {
@@ -34,14 +35,11 @@ async function run() {
             console.log('Generated mnemonic:', mnemonic);
             const hexedMnemonic = await client.mnemonicToHexSeed(mnemonic);
             console.log("Hexed", hexedMnemonic)
-
             // 将助记符存储到 Stronghold 文件中
             await client.storeMnemonic(strongholdSecretManager, hexedMnemonic);
             console.log('Mnemonic stored in Stronghold.');
         }
 
-        // 打印 StrongholdSecretManager 信息
-        console.log('StrongholdSecretManager:', strongholdSecretManager);
 
         // 预设一些配置用于生成地址
         const generateAddressesOptions = {
@@ -51,8 +49,8 @@ async function run() {
         };
 
         // 使用 StrongholdSecretManager 生成新的地址
-        const addresses = await client.generateAddresses(strongholdSecretManager, generateAddressesOptions);
-        console.log('Generated address:', addresses[0]);
+        // const addresses = await client.generateAddresses(strongholdSecretManager, generateAddressesOptions);
+        // console.log('Generated address:', addresses[0]);
 
     } catch (error) {
         console.error('Error:', error);

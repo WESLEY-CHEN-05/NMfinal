@@ -7,3 +7,10 @@
 
 # local env files
 .env*.local
+.env
+
+# stronghold
+*.stronghold
+
+# log file
+*.log
