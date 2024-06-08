@@ -28,17 +28,17 @@ node ***.js
 
 ---
 ## Scripts Introduction 
-### `resolve.js`
+### resolve.js
 Then you can see a new DID has been created and the corresponding DID document is printed. (See `DID_doc_example.txt` for an example.)
 
-### `mnemonic_generate.js`
+### mnemonic_generate.js
 Generate a mnemonic (can use to fill the `MNEMONIC` field in `.env`).
 
-### `mnemonic.validate.js`
+### mnemonic.validate.js
 Validate whether `MNEMONIC` in `.env` are valid.
 
-### `stronghold.js`
+### stronghold.js
 Create stronghold file.
 
-### `iota_**.js`
+### iota_**.js
 Still under development...
