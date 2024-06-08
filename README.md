@@ -10,7 +10,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 
 ### Install packages
-Make sure you have run the command in `IOTA Related` block above. 
+Make sure you have run the command in [IOTA Related](#iota-related) block above. 
 ```
 npm install
 ```
