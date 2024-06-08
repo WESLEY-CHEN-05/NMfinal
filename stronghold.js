@@ -45,7 +45,7 @@ async function run() {
             process.env.MNEMONIC
         );
 
-        const HRP = getHRP();
+        const networkHrp = getHRP();
 
         const address = await strongholdSecretManager.generateEd25519Addresses({
             accountIndex: 0,
@@ -53,7 +53,7 @@ async function run() {
                 start: 0,
                 end: 1,
             },
-            bech32Hrp: HRP,
+            bech32Hrp: networkHrp,
         });
 
         console.log('First public address (Wallet address):', address, '\n');

@@ -45,3 +45,12 @@ Can open a stronghold file and request funds.
 
 ### iota_**.js
 Still under development...
+
+---
+### Reference
+- [IOTA-SDK Examples](https://github.com/iotaledger/iota-sdk/tree/develop/bindings/nodejs/examples)
+- [Request Funds](https://wiki.iota.org/iota-sdk/how-tos/simple-transaction/request-funds/?language=typescript-node)
+- [Create DID](https://wiki.iota.org/identity.rs/how-tos/decentralized-identifiers/create/)
+
+### Note
+- According to the [document](https://www.npmjs.com/package/@iota/sdk-wasm), use `@iota/sdk` instead of `@iota/sdk-wasm`, since the former supports stronghold while the other does not.
