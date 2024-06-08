@@ -17,7 +17,7 @@ npm install
 
 ### Environment setting
 Create an `.env` file (see `.env.example`). 
-- `MNEMONIC`: fill a valid mnemonic. (see [how to generate](#mnemonic_generate.js))
+- `MNEMONIC`: fill a valid mnemonic. (generate using `mnemonic_generate.js`)
 - `STRONGHOLD_PASSWORD`: fill in your stronghold password.
 
 ### Run scripts
@@ -39,6 +39,9 @@ Validate whether `MNEMONIC` in `.env` are valid.
 
 ### stronghold.js
 Create stronghold file.
+
+### iota.js
+Can open a stronghold file and request funds.
 
 ### iota_**.js
 Still under development...
