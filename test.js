@@ -16,6 +16,7 @@ const {
     Storage,
 } = pkg_id;
 
+
 import dotenv from 'dotenv';
 dotenv.config({ path: '.env' });
 
@@ -25,43 +26,25 @@ const API_ENDPOINT = "http://140.112.18.206:14265";
 // The faucet endpoint allows requesting funds for testing purposes.
 const FAUCET_ENDPOINT = "http://140.112.18.206:8091/api/enqueue";
 
-// Define IClientOptions
-const clientOptions = {
-    nodes: [API_ENDPOINT], // provide an API endpoint to connect to IOTA node
-    // localPow: true
-};
-
-// stronghold configuration
-const strongholdPath = 'client.stronghold';
-const password = process.env.STRONGHOLD_PASSWORD;
-
-// ============================================================================
-// Functions
-// Get the Bech32 human-readable part (HRP) of the network.
-async function getHRP(iotaClient){
-    const network_info = await iotaClient.getNetworkInfo();
-    const bech32Hrp = network_info.protocolParameters.bech32Hrp;
-    return bech32Hrp;
-}
-
-// ============================================================================
-// Main
-
-try{
-    const iotaClient = new Client(clientOptions);
-    const didClient = new IotaIdentityClient(iotaClient);
-
-    // open stronghold file
-    const strongholdSecretManager = new SecretManager({
-        stronghold: {
-            password: password,
-            snapshotPath: strongholdPath,
-        },
+/** Demonstrate how to create a DID Document and publish it in a new Alias Output. */
+export async function createIdentity() {
+    const client = new Client({
+        primaryNode: API_ENDPOINT,
+        localPow: true,
     });
+    const didClient = new IotaIdentityClient(client);
 
-    const networkHrp = await getHRP(iotaClient);
+    // Get the Bech32 human-readable part (HRP) of the network.
+    const networkHrp = await didClient.getNetworkHrp();
 
-    const walletAddressBech32 = (await strongholdSecretManager.generateEd25519Addresses({
+    const mnemonicSecretManager = {
+        mnemonic: Utils.generateMnemonic(),
+    };
+
+    // Generate a random mnemonic for our wallet.
+    const secretManager = new SecretManager(mnemonicSecretManager);
+
+    const walletAddressBech32 = (await secretManager.generateEd25519Addresses({
         accountIndex: 0,
         range: {
             start: 0,
@@ -69,13 +52,15 @@ try{
         },
         bech32Hrp: networkHrp,
     }))[0];
-    console.log(walletAddressBech32);
-    
-    // request funds for testing.
-    console.log(await iotaClient.requestFundsFromFaucet(FAUCET_ENDPOINT, walletAddressBech32));
+    console.log("Wallet address Bech32:", walletAddressBech32);
 
+    console.log(await client.requestFundsFromFaucet(FAUCET_ENDPOINT, walletAddressBech32));
 
-    // Create DID
+    // Request funds for the wallet, if needed - only works on development networks.
+    // await ensureAddressHasFunds(client, walletAddressBech32);
+
+    // Create a new DID document with a placeholder DID.
+    // The DID will be derived from the Alias Id of the Alias Output after publishing.
     const document = new IotaDocument(networkHrp);
     const storage = new Storage(new JwkMemStore(), new KeyIdMemStore());
 
@@ -90,14 +75,15 @@ try{
 
     // Construct an Alias Output containing the DID document, with the wallet address
     // set as both the state controller and governor.
+    console.log(walletAddressBech32);
     const address = Utils.parseBech32Address(walletAddressBech32);
+    console.log(address);
     const aliasOutput = await didClient.newDidOutput(address, document);
-    console.log("Alias Output:", JSON.stringify(aliasOutput, null, 2));
+    // console.log("Alias Output:", JSON.stringify(aliasOutput, null, 2));
 
     // Publish the Alias Output and get the published DID document.
-    const published = await didClient.publishDidOutput(strongholdSecretManager, aliasOutput);
+    const published = await didClient.publishDidOutput(mnemonicSecretManager, aliasOutput);
     console.log("Published DID document:", JSON.stringify(published, null, 2));
-
-} catch (error){
-    console.log(error);
 }
+
+await createIdentity();

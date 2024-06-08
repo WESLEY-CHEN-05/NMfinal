@@ -8,3 +8,10 @@
 # local env files
 .env
 .env*.local
+.env
+
+# stronghold
+*.stronghold
+
+# log file
+*.log
