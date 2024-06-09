@@ -51,13 +51,14 @@ try{
     const iotaClient = new Client(clientOptions);
     const didClient = new IotaIdentityClient(iotaClient);
 
-    // open stronghold file
-    const strongholdSecretManager = new SecretManager({
+    const strongholdConfig = {
         stronghold: {
             password: password,
             snapshotPath: strongholdPath,
         },
-    });
+    };
+    // open stronghold file
+    const strongholdSecretManager = new SecretManager(strongholdConfig);
 
     const networkHrp = await getHRP(iotaClient);
 
@@ -93,9 +94,8 @@ try{
     const address = Utils.parseBech32Address(walletAddressBech32);
     const aliasOutput = await didClient.newDidOutput(address, document);
     console.log("Alias Output:", JSON.stringify(aliasOutput, null, 2));
-
     // Publish the Alias Output and get the published DID document.
-    const published = await didClient.publishDidOutput(strongholdSecretManager, aliasOutput);
+    const published = await didClient.publishDidOutput(strongholdConfig, aliasOutput);
     console.log("Published DID document:", JSON.stringify(published, null, 2));
 
 } catch (error){
