@@ -90,6 +90,8 @@ try{
         MethodScope.VerificationMethod(),
     );
 
+    console.log(storage.keyIdStorage());
+
     // document.setMetadataCreated(Timestamp.nowUTC());
     // document.setMetadataUpdated(Timestamp.nowUTC());
 
@@ -97,11 +99,11 @@ try{
     // set as both the state controller and governor.
     const address = Utils.parseBech32Address(walletAddressBech32);
     const aliasOutput = await didClient.newDidOutput(address, document);
-    console.log("Alias Output:", JSON.stringify(aliasOutput, null, 2));
+    // console.log("Alias Output:", JSON.stringify(aliasOutput, null, 2));
     
     // Publish the Alias Output and get the published DID document.
     const published = await didClient.publishDidOutput(strongholdConfig, aliasOutput);
-    console.log("Published DID document:", JSON.stringify(published, null, 2));
+    // console.log("Published DID document:", JSON.stringify(published, null, 2));
 
 } catch (error){
     console.log(error);
