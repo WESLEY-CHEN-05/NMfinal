@@ -19,7 +19,7 @@ npm install
 Create an `.env` file (see `.env.example`). 
 - `MNEMONIC`: fill a valid mnemonic. (generate using `mnemonic_generate.js`)
 - `STRONGHOLD_PASSWORD`: fill in your stronghold password.
-- `DID_EXAMPLE`: fill in one DID (used in `iota_updateDID.js`), for example: `did:iota:tst:0xd67066081f03d61307a932ee2e757d2cbdd8a4a79b06eed21f2c9a390cbd04c5#key-1` (Don't use mine since you do not have my password!)
+- `DID_EXAMPLE`: fill in one DID (used in `iota_updateDID.js`), for example: `did:iota:tst:0xd67066081f03d61307a932ee2e757d2cbdd8a4a79b06eed21f2c9a390cbd04c5#key-1` (Don't use mine since you do not have my password! You can resolve it but cannot update it.)
 
 ### Run scripts
 Simply run following command (modify `***.js` to the scripts you want to run).
@@ -41,11 +41,17 @@ Validate whether `MNEMONIC` in `.env` are valid.
 ### stronghold.js
 Create stronghold file.
 
-### iota.js
-Can open a stronghold file and request funds.
+### iota_createDID.js
+Can open a stronghold file, request funds, and create a DID.
 
-### iota_**.js
-Still under development...
+### iota_resolveDID.js
+Can resolve a did. (Default resolve DID of `DID_EXAMPLE` in `.env`.)
+
+### iota_updateDID.js
+Can update a did. (Default update DID of `DID_EXAMPLE` in `.env`.)
+
+### iota_test*.js
+Ignore it...
 
 ---
 ### Reference
