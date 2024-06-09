@@ -19,7 +19,8 @@ npm install
 Create an `.env` file (see `.env.example`). 
 - `MNEMONIC`: fill a valid mnemonic. (generate using `mnemonic_generate.js`)
 - `STRONGHOLD_PASSWORD`: fill in your stronghold password.
-- `DID_EXAMPLE`: fill in one DID (used in `iota_updateDID.js`), for example: `did:iota:tst:0xd67066081f03d61307a932ee2e757d2cbdd8a4a79b06eed21f2c9a390cbd04c5#key-1` (Don't use mine since you do not have my password! You can resolve it but cannot update it.)
+- `DID_EXAMPLE`: fill in one DID (used in `iota_updateDID.js, vc.js`), for example: `did:iota:tst:0xd67066081f03d61307a932ee2e757d2cbdd8a4a79b06eed21f2c9a390cbd04c5#key-1` (Don't use mine since you do not have my password! You can resolve it but cannot update it.)
+- `DID_EXAMPLE_SUBJECT`: fill in one DID for the subject of VC.
 
 ### Run scripts
 Simply run following command (modify `***.js` to the scripts you want to run).
