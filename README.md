@@ -19,6 +19,7 @@ npm install
 Create an `.env` file (see `.env.example`). 
 - `MNEMONIC`: fill a valid mnemonic. (generate using `mnemonic_generate.js`)
 - `STRONGHOLD_PASSWORD`: fill in your stronghold password.
+- `DID_EXAMPLE`: fill in one DID (used in `iota_updateDID.js`), for example: `did:iota:tst:0xd67066081f03d61307a932ee2e757d2cbdd8a4a79b06eed21f2c9a390cbd04c5#key-1` (Don't use mine since you do not have my password!)
 
 ### Run scripts
 Simply run following command (modify `***.js` to the scripts you want to run).
@@ -34,7 +35,7 @@ Then you can see a new DID has been created and the corresponding DID document i
 ### mnemonic_generate.js
 Generate a mnemonic (can use to fill the `MNEMONIC` field in `.env`).
 
-### mnemonic.validate.js
+### mnemonic_validate.js
 Validate whether `MNEMONIC` in `.env` are valid.
 
 ### stronghold.js

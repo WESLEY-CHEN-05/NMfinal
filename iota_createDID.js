@@ -13,7 +13,8 @@ const {
     JwsAlgorithm,
     KeyIdMemStore,
     MethodScope,
-    Storage,
+    Storage, 
+    Timestamp,
 } = pkg_id;
 
 import dotenv from 'dotenv';
@@ -89,11 +90,15 @@ try{
         MethodScope.VerificationMethod(),
     );
 
+    // document.setMetadataCreated(Timestamp.nowUTC());
+    // document.setMetadataUpdated(Timestamp.nowUTC());
+
     // Construct an Alias Output containing the DID document, with the wallet address
     // set as both the state controller and governor.
     const address = Utils.parseBech32Address(walletAddressBech32);
     const aliasOutput = await didClient.newDidOutput(address, document);
     console.log("Alias Output:", JSON.stringify(aliasOutput, null, 2));
+    
     // Publish the Alias Output and get the published DID document.
     const published = await didClient.publishDidOutput(strongholdConfig, aliasOutput);
     console.log("Published DID document:", JSON.stringify(published, null, 2));
