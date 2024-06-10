@@ -1,0 +1,14 @@
+KeyIdMemStore {
+  _keyIds: Map(1) { 'ALMhRcrw9T0t' => '22gE7wvQ8ySJzNdaXxItDhnfM3w' }
+}
+JwkMemStore {
+  _keys: Map(1) {
+    '22gE7wvQ8ySJzNdaXxItDhnfM3w' => {
+      kty: 'OKP',
+      alg: 'EdDSA',
+      crv: 'Ed25519',
+      x: 'Fl0IFOQ5aTLZUzA1Z_not2xLKCfBTnMbc1xluPq4Skg',
+      d: 'FPaWZpT9v8pyJp5urN-bH-mFi7yJyaXrlyJP9g2AHds'
+    }
+  }
+}

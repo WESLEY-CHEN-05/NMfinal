@@ -12,6 +12,8 @@ const {
     FailFast,
     IotaDocument,
     IotaIdentityClient,
+    Jwk,
+    JwkType,
     JwkMemStore,
     JwsAlgorithm,
     JwsSignatureOptions,
@@ -38,7 +40,8 @@ const API_ENDPOINT = "http://140.112.18.206:14265";
 
 async function main(){
 
-    const issuerDID = process.env.DID_EXAMPLE;
+    // const issuerDID = process.env.DID_EXAMPLE;
+    const issuerDID = "did:iota:tst:0x7959e706614bb57bfb63c429f48039031a3ea678edcc08787370fe535fd72e10#key-1";
     const issuerDocument = await iotaResolution(issuerDID);
 
     const subjectDID = process.env.DID_EXAMPLE_SUBJECT;
@@ -63,27 +66,61 @@ async function main(){
 
     console.log(unsignedVc);
 
-    const issuerStorage = new Storage(new JwkMemStore(), new KeyIdMemStore());
     const [_did, issuerFragment] = issuerDID.split("#");
-    console.log(_did);
+    // console.log(_did);
+    
+    // ======================================
+    // Storage problem
+    // Create method Digest
+    // console.log(issuerDocument.methods()[0]);
+    const methodDigest = new MethodDigest(issuerDocument.methods()[0]);
 
-    console.log(issuerStorage.keyIdStorage());
+    // for testing (see key_id_storage.js)
+    // let arrayBuffer = methodDigest.pack().buffer;
+    // let buffer = Buffer.from(arrayBuffer);
+    // console.log(buffer.toString("base64"));
 
-    const methodDigest = new MethodDigest(new VerificationMethod(_did));
-    // const methodDigest = new MethodDigest(MethodScope.VerificationMethod());
+    // without private key
+    const _jwk_data = ((issuerDocument.methods()[0]).data().toJSON()).publicKeyJwk;
+    // add private key (but how to access private key???)
+    const jwk_data = {
+        ..._jwk_data,
+        d: "FPaWZpT9v8pyJp5urN-bH-mFi7yJyaXrlyJP9g2AHds",
+    };
+    // console.log(jwk_data);
 
+    // Create jwk object
+    const jwk = new Jwk(jwk_data);
+    // console.log(jwk);
+
+    // create JwkMemStore
+    const jwkstore = new JwkMemStore();
+    // this will randomly generate a keyID
+    const keyID = await jwkstore.insert(jwk);
+    // console.log(keyID);
+    // console.log(jwkstore);
+
+    // create KeyIDdMemStore
+    const keyidstore = new KeyIdMemStore();
+    keyidstore.insertKeyId(methodDigest, keyID);
+    // console.log(keyidstore);
+
+    // Create issuer Storage
+    const issuerStorage = new Storage(jwkstore, keyidstore);
+    // console.log(issuerStorage);
+    // console.log(issuerStorage.keyIdStorage());
+    // console.log(issuerStorage.keyStorage());
+    // ======================================
+    
     // Create signed JWT credential.
-    try{
-        const credentialJwt = await issuerDocument.createCredentialJwt(
-            issuerStorage,
-            issuerFragment,
-            unsignedVc,
-            new JwsSignatureOptions(),
-        );
-    } catch (error){
-        console.error("Error creating JWT credential: ", error);
-    }
+    const credentialJwt = await issuerDocument.createCredentialJwt(
+        issuerStorage,
+        issuerFragment,
+        unsignedVc,
+        new JwsSignatureOptions(),
+    );
 
+    console.log(credentialJwt);
 
     // const res = new JwtCredentialValidator(new EdDSAJwsVerifier()).validate(
     //     credentialJwt,
@@ -92,7 +129,6 @@ async function main(){
     //     FailFast.FirstError,
     // );
     // console.log("credentialjwt validation", res.intoCredential());
-
 }
 
 main().then(() => process.exit()).catch(console.error);
