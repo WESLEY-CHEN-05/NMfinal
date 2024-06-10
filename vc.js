@@ -35,22 +35,13 @@ dotenv.config({ path: '.env' });
 
 import { iotaResolution } from './iota_resolveDID.js';
 
-import crypto from 'crypto';
-import pkgx from 'elliptic';
-const { eddsa } = pkgx;
-
-const ec = new eddsa('ed25519');
-
 // The API endpoint of an IOTA node, e.g. Hornet.
 const API_ENDPOINT = "http://140.112.18.206:14265";
 
 async function main(){
 
     // const issuerDID = process.env.DID_EXAMPLE;
-    // const issuerDID = "did:iota:tst:0x7959e706614bb57bfb63c429f48039031a3ea678edcc08787370fe535fd72e10#key-1";
     const issuerDID = "did:iota:tst:0xfda28bbf862c9efcb67d16ca980b3703d3eee827e82d52d6a977a545ecb2ef5f"
-    // const issuerDID = "did:iota:tst:0xd212c12870617317073cf6859d517d5d6024372a772f88a43bb9d0e933de744d";
-    // const issuerDID = "did:iota:tst:0x21d60d7872f638b01da6326a612982930941cd7d05cc3d237cd5825cb02a659d"
     const issuerDocument = await iotaResolution(issuerDID);
 
     const subjectDID = process.env.DID_EXAMPLE_SUBJECT;
@@ -77,7 +68,6 @@ async function main(){
 
     // const [_did, issuerFragment] = issuerDID.split("#");
     const issuerFragment = "key-1";
-    // console.log(_did);
     
     // ======================================
     // Storage problem
@@ -85,71 +75,31 @@ async function main(){
     // console.log(issuerDocument.methods()[0]);
     const methodDigest = new MethodDigest(issuerDocument.methods()[0]);
 
-    // for testing (see key_id_storage.js)
-    // let arrayBuffer = methodDigest.pack().buffer;
-    // let buffer = Buffer.from(arrayBuffer);
-    // console.log(buffer.toString("base64"));
-
     // without private key
     const _jwk_data = ((issuerDocument.methods()[0]).data().toJSON()).publicKeyJwk;
     // add private key (but how to access private key???)
     const jwk_data = {
         ..._jwk_data,
-        // d: "FPaWZpT9v8pyJp5urN-bH-mFi7yJyaXrlyJP9g2AHds",
+        // hardcode, think a way to store it.
         d: "paL-Ja24J4py_-xzvXXS3mVu53fJSc9VZPSViOTU-p8",
-        // d: "paL-Ja24J4py_-xzvXXS3mVu53fJSc9VZPSViOTU-p3",
     };
     // console.log(jwk_data);
-    // const jwk_data = {
-    //     kty: 'OKP',
-    //     alg: 'EdDSA',
-    //     crv: 'Ed25519',
-    //     x: 'EMipAux-IApml8v4tPrZkffN1O0A4NReKHCrehn7zH0',
-    //     d: 'u8nR5mSpTZ6pIDMu8Szxi5xhef8p91fay2UJ_7_XgHM',
-    // }
-    
-    console.log(jwk_data);
 
-    // // Create jwk object
+    // Create jwk object, JwkMemStore
     const jwk = new Jwk(jwk_data);
-    // // console.log(jwk);
-
-    
-    // create JwkMemStore
     const jwkstore = new JwkMemStore();
-
-    // ****** FOR TESTING *******
-    // const keyidmap = new Map();
-    // keyidmap.set('ALCCDPgcifdR', 'Ob7Eqmgt0Jk6NfbzuNtiySBMgSQ')
-    // const keyidstore = new KeyIdMemStore();
-    // console.log("KEYIDSTORE", keyidstore);
-    
-
-    // const jwkmap = new Map();
-    // jwkmap.set('Ob7Eqmgt0Jk6NfbzuNtiySBMgSQ', jwk_data);
-    // const jwkstore = {
-    //     _keys: jwkmap,
-    // }
-    // console.log(jwkstore);
-    // ****** FOR TESTING *******
 
     // this will randomly generate a keyID
     const keyID = await jwkstore.insert(jwk);
-    console.log("private?", jwk.isPrivate())
-    console.log("public?", jwk.isPublic());
-    // console.log(keyID);
-    // console.log(jwkstore);
 
     // create KeyIDdMemStore
     const keyidstore = new KeyIdMemStore();
     keyidstore.insertKeyId(methodDigest, keyID);
-    // console.log(keyidstore);
 
     // Create issuer Storage
     const issuerStorage = new Storage(jwkstore, keyidstore);
-    // console.log(issuerStorage);
-    console.log(issuerStorage.keyIdStorage());
-    console.log(issuerStorage.keyStorage());
+    // console.log(issuerStorage.keyIdStorage());
+    // console.log(issuerStorage.keyStorage());
     // ======================================
     
     // Create signed JWT credential.
@@ -164,8 +114,7 @@ async function main(){
         new JwsSignatureOptions(),
     );
 
-    console.log(credentialJwt);
-    // console.log(credentialJwt.toJSON());
+    console.log(credentialJwt.toJSON());
 
     const res = new JwtCredentialValidator(new EdDSAJwsVerifier()).validate(
         credentialJwt,
