@@ -35,13 +35,20 @@ dotenv.config({ path: '.env' });
 
 import { iotaResolution } from './iota_resolveDID.js';
 
+import crypto from 'crypto';
+import pkgx from 'elliptic';
+const { eddsa } = pkgx;
+
+const ec = new eddsa('ed25519');
+
 // The API endpoint of an IOTA node, e.g. Hornet.
 const API_ENDPOINT = "http://140.112.18.206:14265";
 
 async function main(){
 
     // const issuerDID = process.env.DID_EXAMPLE;
-    const issuerDID = "did:iota:tst:0x7959e706614bb57bfb63c429f48039031a3ea678edcc08787370fe535fd72e10#key-1";
+    // const issuerDID = "did:iota:tst:0x7959e706614bb57bfb63c429f48039031a3ea678edcc08787370fe535fd72e10#key-1";
+    const issuerDID = "did:iota:tst:0xfda28bbf862c9efcb67d16ca980b3703d3eee827e82d52d6a977a545ecb2ef5f#key-1"
     const issuerDocument = await iotaResolution(issuerDID);
 
     const subjectDID = process.env.DID_EXAMPLE_SUBJECT;
@@ -64,7 +71,7 @@ async function main(){
         credentialSubject: subject,
     });
 
-    console.log(unsignedVc);
+    console.log("unsignedVC:", unsignedVc);
 
     const [_did, issuerFragment] = issuerDID.split("#");
     // console.log(_did);
@@ -83,11 +90,33 @@ async function main(){
     // without private key
     const _jwk_data = ((issuerDocument.methods()[0]).data().toJSON()).publicKeyJwk;
     // add private key (but how to access private key???)
-    const jwk_data = {
+    const __jwk_data = {
         ..._jwk_data,
-        d: "FPaWZpT9v8pyJp5urN-bH-mFi7yJyaXrlyJP9g2AHds",
+        // d: "FPaWZpT9v8pyJp5urN-bH-mFi7yJyaXrlyJP9g2AHds",
+        d: "paL-Ja24J4py_-xzvXXS3mVu53fJSc9VZPSViOTU-p8",
+        // d: ec.keyFromPublic(_jwk_data.x),
     };
     // console.log(jwk_data);
+    console.log(__jwk_data);
+
+    const keyPair = ec.keyFromSecret(__jwk_data.d);
+    // const keyPair = ec.keyFromSecret('NiIRq_YRvewUy8PcR54QnAnzvRuvi0AKGnc1N0KP69A');
+    const generatedPublicKey = keyPair.getPublic('hex');
+    
+    const jwk_data = {
+        ...__jwk_data,
+        x: generatedPublicKey,
+    }
+    
+    // if (generatedPublicKey !== 'NXgOohR4ogxS8R3-sPXIMbm0auRLWRZcWXeD_vR8R9M'){
+        // console.log(generatedPublicKey);
+    if (generatedPublicKey !== jwk_data.x) {
+        console.log("HIHI", generatedPublicKey, "WQ");
+        console.log("HIHI", jwk_data.x, "WQ");
+        console.error("私鑰和公鑰不匹配！");
+    } else {
+        console.log("私鑰和公鑰匹配！");
+    }
 
     // Create jwk object
     const jwk = new Jwk(jwk_data);
@@ -108,8 +137,8 @@ async function main(){
     // Create issuer Storage
     const issuerStorage = new Storage(jwkstore, keyidstore);
     // console.log(issuerStorage);
-    // console.log(issuerStorage.keyIdStorage());
-    // console.log(issuerStorage.keyStorage());
+    console.log(issuerStorage.keyIdStorage());
+    console.log(issuerStorage.keyStorage());
     // ======================================
     
     // Create signed JWT credential.
@@ -121,14 +150,15 @@ async function main(){
     );
 
     console.log(credentialJwt);
+    console.log(credentialJwt.toJSON());
 
-    // const res = new JwtCredentialValidator(new EdDSAJwsVerifier()).validate(
-    //     credentialJwt,
-    //     issuerDocument,
-    //     new JwtCredentialValidationOptions(),
-    //     FailFast.FirstError,
-    // );
-    // console.log("credentialjwt validation", res.intoCredential());
+    const res = new JwtCredentialValidator(new EdDSAJwsVerifier()).validate(
+        credentialJwt,
+        issuerDocument,
+        new JwtCredentialValidationOptions(),
+        FailFast.FirstError,
+    );
+    console.log("credentialjwt validation", res.intoCredential());
 }
 
 main().then(() => process.exit()).catch(console.error);
