@@ -1,14 +1,31 @@
 KeyIdMemStore {
-  _keyIds: Map(1) { 'ALMhRcrw9T0t' => '22gE7wvQ8ySJzNdaXxItDhnfM3w' }
+  _keyIds: Map(1) { 'ALCCDPgcifdR' => 'IENbu6sj56RBeCCBCw-pTIQoYWU' }
 }
 JwkMemStore {
   _keys: Map(1) {
-    '22gE7wvQ8ySJzNdaXxItDhnfM3w' => {
+    'IENbu6sj56RBeCCBCw-pTIQoYWU' => {
       kty: 'OKP',
       alg: 'EdDSA',
       crv: 'Ed25519',
-      x: 'Fl0IFOQ5aTLZUzA1Z_not2xLKCfBTnMbc1xluPq4Skg',
-      d: 'FPaWZpT9v8pyJp5urN-bH-mFi7yJyaXrlyJP9g2AHds'
+      x: 'EMipAux-IApml8v4tPrZkffN1O0A4NReKHCrehn7zH0',
+      d: 'u8nR5mSpTZ6pIDMu8Szxi5xhef8p91fay2UJ_7_XgHM'
     }
   }
+}
+
+Published DID document: {
+  "id": "did:iota:tst:0xd212c12870617317073cf6859d517d5d6024372a772f88a43bb9d0e933de744d",
+  "verificationMethod": [
+    {
+      "id": "did:iota:tst:0xd212c12870617317073cf6859d517d5d6024372a772f88a43bb9d0e933de744d#key-1",
+      "controller": "did:iota:tst:0xd212c12870617317073cf6859d517d5d6024372a772f88a43bb9d0e933de744d",
+      "type": "JsonWebKey2020",
+      "publicKeyJwk": {
+        "kty": "OKP",
+        "alg": "EdDSA",
+        "crv": "Ed25519",
+        "x": "EMipAux-IApml8v4tPrZkffN1O0A4NReKHCrehn7zH0"
+      }
+    }
+  ]
 }

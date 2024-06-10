@@ -48,7 +48,9 @@ async function main(){
 
     // const issuerDID = process.env.DID_EXAMPLE;
     // const issuerDID = "did:iota:tst:0x7959e706614bb57bfb63c429f48039031a3ea678edcc08787370fe535fd72e10#key-1";
-    const issuerDID = "did:iota:tst:0xfda28bbf862c9efcb67d16ca980b3703d3eee827e82d52d6a977a545ecb2ef5f#key-1"
+    const issuerDID = "did:iota:tst:0xfda28bbf862c9efcb67d16ca980b3703d3eee827e82d52d6a977a545ecb2ef5f"
+    // const issuerDID = "did:iota:tst:0xd212c12870617317073cf6859d517d5d6024372a772f88a43bb9d0e933de744d";
+    // const issuerDID = "did:iota:tst:0x21d60d7872f638b01da6326a612982930941cd7d05cc3d237cd5825cb02a659d"
     const issuerDocument = await iotaResolution(issuerDID);
 
     const subjectDID = process.env.DID_EXAMPLE_SUBJECT;
@@ -73,7 +75,8 @@ async function main(){
 
     console.log("unsignedVC:", unsignedVc);
 
-    const [_did, issuerFragment] = issuerDID.split("#");
+    // const [_did, issuerFragment] = issuerDID.split("#");
+    const issuerFragment = "key-1";
     // console.log(_did);
     
     // ======================================
@@ -90,42 +93,50 @@ async function main(){
     // without private key
     const _jwk_data = ((issuerDocument.methods()[0]).data().toJSON()).publicKeyJwk;
     // add private key (but how to access private key???)
-    const __jwk_data = {
+    const jwk_data = {
         ..._jwk_data,
         // d: "FPaWZpT9v8pyJp5urN-bH-mFi7yJyaXrlyJP9g2AHds",
         d: "paL-Ja24J4py_-xzvXXS3mVu53fJSc9VZPSViOTU-p8",
-        // d: ec.keyFromPublic(_jwk_data.x),
+        // d: "paL-Ja24J4py_-xzvXXS3mVu53fJSc9VZPSViOTU-p3",
     };
     // console.log(jwk_data);
-    console.log(__jwk_data);
-
-    const keyPair = ec.keyFromSecret(__jwk_data.d);
-    // const keyPair = ec.keyFromSecret('NiIRq_YRvewUy8PcR54QnAnzvRuvi0AKGnc1N0KP69A');
-    const generatedPublicKey = keyPair.getPublic('hex');
+    // const jwk_data = {
+    //     kty: 'OKP',
+    //     alg: 'EdDSA',
+    //     crv: 'Ed25519',
+    //     x: 'EMipAux-IApml8v4tPrZkffN1O0A4NReKHCrehn7zH0',
+    //     d: 'u8nR5mSpTZ6pIDMu8Szxi5xhef8p91fay2UJ_7_XgHM',
+    // }
     
-    const jwk_data = {
-        ...__jwk_data,
-        x: generatedPublicKey,
-    }
-    
-    // if (generatedPublicKey !== 'NXgOohR4ogxS8R3-sPXIMbm0auRLWRZcWXeD_vR8R9M'){
-        // console.log(generatedPublicKey);
-    if (generatedPublicKey !== jwk_data.x) {
-        console.log("HIHI", generatedPublicKey, "WQ");
-        console.log("HIHI", jwk_data.x, "WQ");
-        console.error("私鑰和公鑰不匹配！");
-    } else {
-        console.log("私鑰和公鑰匹配！");
-    }
+    console.log(jwk_data);
 
-    // Create jwk object
+    // // Create jwk object
     const jwk = new Jwk(jwk_data);
-    // console.log(jwk);
+    // // console.log(jwk);
 
+    
     // create JwkMemStore
     const jwkstore = new JwkMemStore();
+
+    // ****** FOR TESTING *******
+    // const keyidmap = new Map();
+    // keyidmap.set('ALCCDPgcifdR', 'Ob7Eqmgt0Jk6NfbzuNtiySBMgSQ')
+    // const keyidstore = new KeyIdMemStore();
+    // console.log("KEYIDSTORE", keyidstore);
+    
+
+    // const jwkmap = new Map();
+    // jwkmap.set('Ob7Eqmgt0Jk6NfbzuNtiySBMgSQ', jwk_data);
+    // const jwkstore = {
+    //     _keys: jwkmap,
+    // }
+    // console.log(jwkstore);
+    // ****** FOR TESTING *******
+
     // this will randomly generate a keyID
     const keyID = await jwkstore.insert(jwk);
+    console.log("private?", jwk.isPrivate())
+    console.log("public?", jwk.isPublic());
     // console.log(keyID);
     // console.log(jwkstore);
 
@@ -142,6 +153,10 @@ async function main(){
     // ======================================
     
     // Create signed JWT credential.
+    console.log("FR", issuerFragment);
+
+    // console.log("HI", issuerDocument.toJSON());
+    console.log("HI", issuerDocument.toString());
     const credentialJwt = await issuerDocument.createCredentialJwt(
         issuerStorage,
         issuerFragment,
@@ -150,13 +165,14 @@ async function main(){
     );
 
     console.log(credentialJwt);
-    console.log(credentialJwt.toJSON());
+    // console.log(credentialJwt.toJSON());
 
     const res = new JwtCredentialValidator(new EdDSAJwsVerifier()).validate(
         credentialJwt,
         issuerDocument,
         new JwtCredentialValidationOptions(),
-        FailFast.FirstError,
+        // FailFast.FirstError,
+        FailFast.AllErrors,
     );
     console.log("credentialjwt validation", res.intoCredential());
 }
