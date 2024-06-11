@@ -1,7 +1,7 @@
 type Driver {
   DIDid: string!
   firstName: String!
-  lastName: Int!
+  lastName: String!
   email: String!
   password: String!
   signedIn: Boolean!
