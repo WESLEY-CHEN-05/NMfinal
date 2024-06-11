@@ -65,7 +65,12 @@ export default function Account() {
         <IconButton onClick={handleOpen}>
           <AccountCircleIcon />
         </IconButton>:
-        <Button onClick={handleOpen} variant="contained" color="success" >Login</Button>
+        <Button onClick={handleOpen} variant="contained" sx={{ 
+          backgroundColor: 'red', 
+          '&:hover': {
+            backgroundColor: 'dark  red', // Optional: Change the hover color
+          }
+         }}>Login</Button>
       }
       
       <Modal
