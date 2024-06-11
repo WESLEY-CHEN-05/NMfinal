@@ -38,6 +38,7 @@ export default function SignUp() {
       identity: data.get("identity"),
       firstName: data.get("firstName"),
       lastName: data.get("lastName"),
+      DIDid: data.get("DIDid"),
       email: data.get("email"),
       password: data.get("password")
     });
@@ -123,6 +124,15 @@ export default function SignUp() {
                   label="Last Name"
                   name="lastName"
                   autoComplete="family-name"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="DIDid"
+                  label="DIDid"
+                  name="DIDid"
                 />
               </Grid>
               <Grid item xs={12}>

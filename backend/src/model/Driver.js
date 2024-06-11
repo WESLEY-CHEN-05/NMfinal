@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
 
-const UserSchema = new Schema({
+const DriverSchema = new Schema({
   fistName: {
     type: String,
     required: true,
@@ -9,7 +9,19 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
+  DIDid: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String, 
+    required: true
+  },
+  password: {
+    type: String, 
+    required: true
+  }
 });
 
-const driverModel = model('driver', UserSchema);
-export default driverModel;
+const DriverModel = model('driver', DriverSchema);
+export default DriverModel;

@@ -1,14 +1,17 @@
 type Driver {
-  id: ID!
+  DIDid: string!
   firstName: String!
   lastName: Int!
+  email: String!
+  password: String!
+  signedIn: Boolean!
 }
 
 type Query {
-  getPeople: [Person!]!
-  getPerson(id: ID!): Person
+  getPeople: [Driver!]!
+  getPerson(id: DIDid!): Driver
 }
 
 type Mutation {
-  addPerson(firstName: String!, lastName: String!): Person
+  addDriver(firstName: String!, lastName: String!, DIDid: String!, email:String!, password:String!): Driver
 }

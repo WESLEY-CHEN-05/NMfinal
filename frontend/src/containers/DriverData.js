@@ -1,20 +1,21 @@
 import * as React from 'react';
-import {CssBaseline, Box } from '@mui/material';
+import {CssBaseline, Box, Button } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { DataGrid } from '@mui/x-data-grid';
 import { usePage } from '../hooks/usePage';
 import CustomizedAppBar from '../components/CustomizedAppBar';
+import IssueButton from '../components/IssueButton'
 
 const columns = [
-  { field: 'id', headerName: 'ID', width: 90 },
+  { field: 'DIDid', headerName: 'ID', width: 90 },
   {
     field: 'name',
-    headerName: '姓名',
+    headerName: 'name',
     width: 150,
   },
   {
     field: 'age',
-    headerName: '年齡',
+    headerName: 'age',
     type: 'number',
     width: 150,
     headerAlign: 'left',
@@ -22,10 +23,17 @@ const columns = [
   },
   {
     field: 'time',
-    headerName: '認證時間',
+    headerName: 'issued time',
     type: 'date',
     width: 110,
-  }
+  },
+  {
+    field: 'issued',
+    headerName: '發行',
+    renderCell: () => (
+      <IssueButton issuerDID={'did1'} subjectDID={'did2'}></IssueButton>
+    ),
+  },
 ];
 
 const rows = [
