@@ -14,7 +14,7 @@ import rentalRecordImg2 from '../img/rental_record2.png'
 function HomePage() {
   const { theme } = usePage();
   const functionBlocks = [
-    {title: '租車', to: '/driver_data', image: carRentalImg2},
+    {title: '租車', to: '/rent', image: carRentalImg2},
     {title: '司機\n資料', to: '/driver_data', image: driverDataImg2},
     {title: '租借\n紀錄', to: '/history', image: rentalRecordImg2}
   ]
