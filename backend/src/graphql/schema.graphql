@@ -1,5 +1,5 @@
 type Driver {
-  DIDid: string!
+  DIDid: ID!
   firstName: String!
   lastName: String!
   email: String!
@@ -8,10 +8,10 @@ type Driver {
 }
 
 type Query {
-  getPeople: [Driver!]!
-  getPerson(id: DIDid!): Driver
+  getDrivers: [Driver!]!
+  getDriver(DIDid: ID!): Driver
 }
 
 type Mutation {
-  addDriver(firstName: String!, lastName: String!, DIDid: String!, email:String!, password:String!): Driver
+  addDriver(firstName: String!, lastName: String!, DIDid: ID!, email:String!, password:String!): Driver
 }

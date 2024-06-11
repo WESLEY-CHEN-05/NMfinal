@@ -5,18 +5,15 @@ import AES from 'crypto-js/aes';
 export function useSignUp(){
     const [addDriver] = useMutation(ADD_DRIVER);
     
-    return async function(firstName, lastName, DIDid, email, password){
+    return async function(identity, firstName, lastName, DIDid, email, password){
         try{
             const encryptPassword = AES.encrypt(password, 'NMfinalalalala').toString();
+            console.log({firstName, lastName, DIDid, email, password});
             const {data} = await addDriver({variables:{firstName, lastName, DIDid, email, password: encryptPassword}});
             return {state:'success',data:data?.addDriver};
         }catch(error){
-            let type;
-            if(error.message.includes(':')){
-                const m = error.message;
-                type = m.substring(0,m.indexOf(':'));
-            }
-            return {state:'error', err:error, type};
+            console.log(error.message);
+            return { state:'error', err:error.message };
         }
     }
 }
