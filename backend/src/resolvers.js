@@ -1,4 +1,6 @@
-import Driver from './model/Driver.js';
+import { GraphQLError } from 'graphql';
+import bcrypt from "bcrypt";
+import CryptoJS from 'crypto-js';
 
 const resolvers = {
   Query: {
@@ -11,24 +13,21 @@ const resolvers = {
         const p = await PlayerModel.findOne({email});
         if(p)throw new GraphQLError(`USED-EMAIL:The email = ${email} has been used`);
     
-        let newid = uuidv4();
-        while(await PlayerModel.findOne({ID:newid})){
-            newid = uuidv4();
-        };
-        const bytes  = CryptoJS.AES.decrypt(ciphertext, 'webProgramming123');
+        
+        const bytes  = CryptoJS.AES.decrypt(ciphertext, 'NMfinalalalala');
         const password = bytes.toString(CryptoJS.enc.Utf8);
         // console.log({name, password, email});
         const hash = await bcrypt.hash(password, saltRounds)
           // Store hash in your password DB.
-        const player = await new DriverModel({
+        const driver = await new DriverModel({
               DIDid,
               firstName,
               lastName,
-              password:hash,
+              password: hash,
               email,
-              signedIn:false,
+              signedIn: false,
             }).save();
-        return player;
+        return driver;
       }catch(e){
         if(e instanceof GraphQLError)throw e;
         throw new GraphQLError(e);

@@ -9,7 +9,7 @@ export function useSignUp(){
         try{
             const encryptPassword = AES.encrypt(password, 'NMfinalalalala').toString();
             const {data} = await addDriver({variables:{firstName, lastName, DIDid, email, password: encryptPassword}});
-            return {state:'success',data:data?.createPlayer};
+            return {state:'success',data:data?.addDriver};
         }catch(error){
             let type;
             if(error.message.includes(':')){
