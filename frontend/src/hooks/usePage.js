@@ -8,6 +8,7 @@ const PageProvider = (props) => {
   const [userName, setUserName] = useState(localStorage.getItem('userName') || '');
   const [userID, setUserID] = useState(localStorage.getItem('userID') || '');
   const [userEmail, setUserEmail] = useState('');
+  const [identity, setIdentity] = useState('guest');
   const [signedIn, setSignedIn] = useState(false);
   const [open, setOpen] = useState(false);
   const [gameStage, setGameStage] = useState('idle');
@@ -26,7 +27,8 @@ const PageProvider = (props) => {
           userEmail, setUserEmail, 
           signedIn, setSignedIn, 
           open, setOpen,
-          gameStage, setGameStage
+          gameStage, setGameStage,
+          identity, setIdentity,
         }}
         {...props}
     ></PageContext.Provider>
