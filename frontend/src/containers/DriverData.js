@@ -48,14 +48,14 @@ export default function DriverData() {
       {/* top */}
       <CustomizedAppBar/>
       {/* main content */}
-      <Box sx={{ height: 370, width: '100%' }}>
+      <Box sx={{ height: 500, width: '70%', margin: '100px auto' }}>
         <DataGrid
           rows={rows}
           columns={columns}
           initialState={{
             pagination: {
               paginationModel: {
-                pageSize: 5,
+                pageSize: 10,
               },
             },
           }}

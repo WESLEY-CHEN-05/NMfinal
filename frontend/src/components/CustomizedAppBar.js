@@ -11,7 +11,7 @@ const CustomizedAppBar = () => {
     <AppBar position="fixed">
       <Toolbar>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          DID Taxi Service
+          Trustride
         </Typography>
         <IconButton onClick={() => navigate('/')} color="inherit" aria-label="home">
           <HomeIcon />

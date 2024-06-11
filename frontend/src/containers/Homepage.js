@@ -27,7 +27,7 @@ function HomePage() {
       {/* main content */}
       <Container maxWidth='md' sx={{ marginTop: '80px' }}>
         <Typography variant="h3" align='center' gutterBottom>
-          Welcome to DID Taxi Service
+          Welcome to Trustride
         </Typography>
         <Typography variant="body1" align='center' gutterBottom>
           Secure and reliable taxi service matching platform using Decentralized Identity (DID).
