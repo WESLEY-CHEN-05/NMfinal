@@ -1,4 +1,4 @@
-import { ADD_DRIVER } from "../graphql";
+import { ADD_DRIVER } from "../graphql/mutation";
 import { useMutation,useLazyQuery } from "@apollo/client";
 import AES from 'crypto-js/aes';
 

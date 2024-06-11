@@ -7,7 +7,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { ThemeProvider } from '@mui/material/styles';
 import { lightTheme, darkTheme } from "../Theme";
-import { useSignUp } from '../Utilities/sign';
+import { useSignUp } from '../utilities/sign';
 
 //import { useSignUp } from '../Utilities/sign';
 
