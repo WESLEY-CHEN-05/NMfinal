@@ -1,4 +1,5 @@
-import { ADD_DRIVER } from "../graphql/mutation";
+import { ADD_DRIVER, UPDATESIGNEDIN_MUTATION} from "../graphql/mutation";
+import { GET_DRIVER_BY_EMAIL } from "../graphql/query";
 import { useMutation,useLazyQuery } from "@apollo/client";
 import AES from 'crypto-js/aes';
 
@@ -17,46 +18,34 @@ export function useSignUp(){
         }
     }
 }
-/*
+
 export function useSignIn(){
-    const [getID] = useLazyQuery(PLAYERID_QUERY);
-    const [getPlayer] = useLazyQuery(PLAYER_QUERY);
+    const [getDriverByEmail] = useLazyQuery(GET_DRIVER_BY_EMAIL);
     const [updateSignedIn] = useMutation(UPDATESIGNEDIN_MUTATION);
-    return async function(email, password){
+    return async function(identity, email, password){
         let data,err;
+        console.log(identity, email, password);
         try{
-            ({data,error:err} = await getID({variables:{email}}));
-            // console.log(data);
-            if(err)throw err;
+            ({data, error:err} = await getDriverByEmail({variables:{email}}));
+            
+            if (err) throw err;
         }catch(err){ 
-            let type;
-            if(err.message.includes(':')){
-                const m=err.message;
-                type = m.substring(0,m.indexOf(':'));
-                // console.error(type);
-            }
-            return {state:'error', err, type};
+            return {state:'error', err};
         }
         try{
-            const encryptPassword = AES.encrypt(password, 'webProgramming123').toString();
-            const {data:result} = await updateSignedIn({variables:{playerID:data.playerID, state:true, password:encryptPassword}});
+            const encryptPassword = AES.encrypt(password, 'NMfinalalalala').toString();
+            const {data:result} = await updateSignedIn({variables:{identity, state:true, email,  password:encryptPassword}});
 
-            const {data:{player}} = await getPlayer({variables:{ID:result?.updateSignedIn}});
             // console.log(result);
             // console.log({state:'success',player:{ID:result?.updateSignedIn,...player}});
-            return {state:'success',player:{ID:result?.updateSignedIn,...player}};
+            return {state:'success', driver: result};
         }catch(err){
-            let type;
-            if(err.message.includes(':')){
-                const m=err.message;
-                type = m.substring(0,m.indexOf(':'));
-                // console.error(type);
-            }
-            return {state:'error', err, type};
+            console.log(err.message);
+            return {state:'error', err: err.message };
         }
     }
 }
-
+/*
 export function useSignOut(){
     const [updateSignedIn] = useMutation(UPDATESIGNEDIN_MUTATION);
     return async function(playerID){

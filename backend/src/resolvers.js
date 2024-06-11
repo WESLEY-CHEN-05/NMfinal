@@ -8,6 +8,16 @@ const resolvers = {
   Query: {
     getDrivers: async () => await find({}),
     getDriver: async (_, { DIDid }) => await findById(DIDid),
+    getDriverByEmail: async(_, {email}, {DriverModel})=>{
+      try{
+          const driver = await DriverModel.findOne({email});
+          if (driver) return driver;
+          throw new GraphQLError('email not found');
+      }catch(e){
+          if(e instanceof GraphQLError) throw e;
+          throw new GraphQLError(e);
+      }
+    },
   },
   Mutation: {
     addDriver: async(_, { firstName, lastName, DIDid, password: ciphertext, email }, { DriverModel })=>{
@@ -31,6 +41,32 @@ const resolvers = {
               signedIn: false,
             }).save();
         return driver;
+      }catch(e){
+        if(e instanceof GraphQLError)throw e;
+        throw new GraphQLError(e);
+      }
+    },
+    updateSignedIn:async(_,{identity, state, email, password:ciphertext}, {DriverModel})=>{
+      try{
+        let person;
+        console.log(email)
+        if (identity === "driver") person = await DriverModel.findOne({email});
+        if(!person) throw new GraphQLError(`account not found`);
+    
+        if(!state){//sign out
+          person.signedIn = state;
+          await person.save();
+          return person
+        }
+        const bytes  = CryptoJS.AES.decrypt(ciphertext, 'NMfinalalalala');
+        const password = bytes.toString(CryptoJS.enc.Utf8);
+    
+        const result = await bcrypt.compare(password, person.password);
+        if(!result)throw new GraphQLError(`The password is not correct`);
+        person.signedIn = state;
+        await person.save();
+        return person;
+  
       }catch(e){
         if(e instanceof GraphQLError)throw e;
         throw new GraphQLError(e);

@@ -7,11 +7,28 @@ type Driver {
   signedIn: Boolean!
 }
 
+type Issuer {
+  DIDid: ID!
+  email: String!
+  password: String!
+  signedIn: Boolean!
+}
+
+type Passenger {
+  firstName: String!
+  lastName: String!
+  email: ID!
+  password: String!
+  signedIn: Boolean!
+}
+
 type Query {
   getDrivers: [Driver!]!
   getDriver(DIDid: ID!): Driver
+  getDriverByEmail(email: String!): Driver
 }
 
 type Mutation {
   addDriver(firstName: String!, lastName: String!, DIDid: ID!, email:String!, password:String!): Driver
+  updateSignedIn(identity: String!, state:Boolean!, email:String!, password:String!):Driver
 }
