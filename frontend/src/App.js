@@ -5,6 +5,7 @@ import SignIn from './containers/SignIn';
 import SignUp from './containers/SignUp';
 import DriverData from './containers/DriverData';
 import History from './containers/History';
+import Rent from './containers/Rent'
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/sign_up" element={<SignUp/>}/>
         <Route path="/driver_data" element={<DriverData/>}/>
         <Route path="/history" element={<History/>}/>
+        <Route path='/rent' element={<Rent/>}/>
       </Routes>
     </Router>
   );

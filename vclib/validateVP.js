@@ -22,79 +22,87 @@ const API_ENDPOINT = "http://140.112.18.206:14265";
 
 export async function validateVP(nonce, proofJwkString){
 
-    const presentationJwt = new Jwt(proofJwkString);
+    try {
 
-    // Verifier receives the Verifiable Presentation and verifies it.
-    const jwtPresentationValidationOptions = new JwtPresentationValidationOptions(
-        {
-            presentationVerifierOptions: new JwsVerificationOptions({ nonce }),
-        },
-    );
+        const presentationJwt = new Jwt(proofJwkString);
 
-    const client = new Client({
-        primaryNode: API_ENDPOINT,
-        localPow: true,
-    });
-    const didClient = new IotaIdentityClient(client);
+        // Verifier receives the Verifiable Presentation and verifies it.
+        const jwtPresentationValidationOptions = new JwtPresentationValidationOptions(
+            {
+                presentationVerifierOptions: new JwsVerificationOptions({ nonce }),
+            },
+        );
 
-    const resolver = new Resolver({
-        client: didClient,
-    });
+        const client = new Client({
+            primaryNode: API_ENDPOINT,
+            localPow: true,
+        });
+        const didClient = new IotaIdentityClient(client);
 
-    // Resolve the presentation holder.
-    const presentationHolderDID = JwtPresentationValidator.extractHolder(presentationJwt);
-    const resolvedHolder = await resolver.resolve(
-        presentationHolderDID.toString(),
-    );
-
-    // Validate presentation. Note that this doesn't validate the included credentials.
-    let decodedPresentation = new JwtPresentationValidator(new EdDSAJwsVerifier()).validate(
-        presentationJwt,
-        resolvedHolder,
-        jwtPresentationValidationOptions,
-    );
-
-    // Validate the credentials in the presentation.
-    let credentialValidator = new JwtCredentialValidator(new EdDSAJwsVerifier());
-    let validationOptions = new JwtCredentialValidationOptions({
-        subjectHolderRelationship: [
-            presentationHolderDID.toString(),
-            SubjectHolderRelationship.AlwaysSubject,
-        ],
-    });
-
-    let jwtCredentials = decodedPresentation
-        .presentation()
-        .verifiableCredential()
-        .map((credential) => {
-            const jwt = credential.tryIntoJwt();
-            if (!jwt) {
-                throw new Error("expected a JWT credential");
-            } else {
-                return jwt;
-            }
+        const resolver = new Resolver({
+            client: didClient,
         });
 
-    // Concurrently resolve the issuers' documents.
-    let issuers = [];
-    for (let jwtCredential of jwtCredentials) {
-        let issuer = JwtCredentialValidator.extractIssuerFromJwt(jwtCredential);
-        issuers.push(issuer.toString());
-    }
-    let resolvedIssuers = await resolver.resolveMultiple(issuers);
-
-    // Validate the credentials in the presentation.
-    for (let i = 0; i < jwtCredentials.length; i++) {
-        credentialValidator.validate(
-            jwtCredentials[i],
-            resolvedIssuers[i],
-            validationOptions,
-            FailFast.FirstError,
+        // Resolve the presentation holder.
+        const presentationHolderDID = JwtPresentationValidator.extractHolder(presentationJwt);
+        const resolvedHolder = await resolver.resolve(
+            presentationHolderDID.toString(),
         );
-    }
 
-    // Since no errors were thrown we know that the validation was successful.
-    console.log(`VP successfully validated`);
+        // Validate presentation. Note that this doesn't validate the included credentials.
+        let decodedPresentation = new JwtPresentationValidator(new EdDSAJwsVerifier()).validate(
+            presentationJwt,
+            resolvedHolder,
+            jwtPresentationValidationOptions,
+        );
+
+        // Validate the credentials in the presentation.
+        let credentialValidator = new JwtCredentialValidator(new EdDSAJwsVerifier());
+        let validationOptions = new JwtCredentialValidationOptions({
+            subjectHolderRelationship: [
+                presentationHolderDID.toString(),
+                SubjectHolderRelationship.AlwaysSubject,
+            ],
+        });
+
+        let jwtCredentials = decodedPresentation
+            .presentation()
+            .verifiableCredential()
+            .map((credential) => {
+                const jwt = credential.tryIntoJwt();
+                if (!jwt) {
+                    throw new Error("expected a JWT credential");
+                } else {
+                    return jwt;
+                }
+            });
+
+        // Concurrently resolve the issuers' documents.
+        let issuers = [];
+        for (let jwtCredential of jwtCredentials) {
+            let issuer = JwtCredentialValidator.extractIssuerFromJwt(jwtCredential);
+            issuers.push(issuer.toString());
+        }
+        let resolvedIssuers = await resolver.resolveMultiple(issuers);
+
+        // Validate the credentials in the presentation.
+        for (let i = 0; i < jwtCredentials.length; i++) {
+            credentialValidator.validate(
+                jwtCredentials[i],
+                resolvedIssuers[i],
+                validationOptions,
+                FailFast.FirstError,
+            );
+        }
+
+        // Since no errors were thrown we know that the validation was successful.
+        console.log(`VP successfully validated`);
+        return true;
+
+    } catch (error){
+        console.log(error);
+        return false;
+    }
 }
 
 // // ================ SAMPLE USAGE ===================
