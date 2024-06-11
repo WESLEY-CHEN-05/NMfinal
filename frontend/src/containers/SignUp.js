@@ -7,6 +7,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { ThemeProvider } from '@mui/material/styles';
 import { lightTheme, darkTheme } from "../Theme";
+import { useSignUp } from '../Utilities/sign';
 
 //import { useSignUp } from '../Utilities/sign';
 
@@ -24,7 +25,7 @@ function Copyright(props) {
 }
 
 export default function SignUp() {
-
+  const signUp = useSignUp();
   const navigate = useNavigate();
   //const signUp = useSignUp();
   const [errorMessage, setErrorMessage] = useState('');
@@ -48,14 +49,14 @@ export default function SignUp() {
       setWrong(true);
       return;
     }
-    /*
+    
     const { state, err, type } = await signUp(data.get("firstName"), data.get("lastName"), data.get("email"), data.get("password"));
     if (state === 'success') navigate('/sign_in');
     else if (type === 'USED-EMAIL') {
       setErrorMessage('The email has been used.');
       setWrong(true);
     }
-    else console.error(err); */   
+    else console.error(err);  
   };
 
   return (

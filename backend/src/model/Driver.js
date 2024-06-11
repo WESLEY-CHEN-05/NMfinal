@@ -1,26 +1,11 @@
 import { Schema, model } from 'mongoose';
 
 const DriverSchema = new Schema({
-  fistName: {
-    type: String,
-    required: true,
-  },
-  lastName: {
-    type: String,
-    required: true,
-  },
-  DIDid: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String, 
-    required: true
-  },
-  password: {
-    type: String, 
-    required: true
-  }
+  DIDid:{type: String, required: [true,'DIDid field is required']},
+  username:{type: String, required: [true, 'Username field is required']},//unique
+  email:{type:String, required: [true, 'Email field is required.']},
+  password:{type: String, required: [true, 'Password field is required']},
+  signedIn:{type: Boolean, required: [true, 'Signed In state is required']},
 });
 
 const DriverModel = model('driver', DriverSchema);
