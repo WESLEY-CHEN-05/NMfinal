@@ -11,3 +11,16 @@ export const ADD_DRIVER = gql`
     }
   }
 `;
+
+export const UPDATESIGNEDIN_MUTATION = gql`
+    mutation updateSignedIn($identity:String!, $state:Boolean!, $email:String!, $password:String!){
+        updateSignedIn(identity:$identity, state:$state, email:$email, password:$password){
+            DIDid
+            firstName
+            lastName
+            email
+            signedIn
+            # You can include other fields of the Driver object as needed
+        }
+    }
+`;
