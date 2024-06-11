@@ -10,8 +10,7 @@ const CustomizedAppBar = () => {
   return (
     <AppBar position="fixed">
       <Toolbar>
-        <Box
-        sx={{flexGrow:1 }}>
+        <Box sx={{flexGrow:1 }}>
           <Box 
             component="img" 
             src="logo.png" 

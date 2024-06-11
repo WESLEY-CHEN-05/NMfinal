@@ -40,7 +40,7 @@ function HomePage() {
             textAlign: 'center', 
             fontWeight: 'bold' 
           }} gutterBottom>
-            Welcome to TrustRide
+            Welcome to TrustRide.
           </Typography>
           <Typography variant="h4" align='center' sx={{color: 'secondary.main'}} gutterBottom>
             A secure and reliable taxi service matching platform. 

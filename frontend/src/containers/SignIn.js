@@ -94,7 +94,7 @@ export default function SignInSide() {
       </Snackbar>
       <CssBaseline />
       <Grid container component="main" sx={{ height: '100vh', backgroundImage: `url(${taxiImg})` }} justifyContent='center' >
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} sx={{opacity:0.8}} square>
+        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} sx={{opacity:0.97}} square>
           <Box
             sx={{
               my: 8,
@@ -161,7 +161,7 @@ export default function SignInSide() {
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 3, mb: 2 }}
+                sx={{ mt: 3, mb: 2 , bgcolor:'primary.main'}}
               >
                 Sign In
               </Button>
