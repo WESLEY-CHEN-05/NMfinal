@@ -10,8 +10,8 @@ const CustomizedAppBar = () => {
   return (
     <AppBar position="fixed">
       <Toolbar>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          Trustride
+        <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', flexGrow: 1 }}>
+          TrustRide
         </Typography>
         <IconButton onClick={() => navigate('/')} color="inherit" aria-label="home">
           <HomeIcon />

@@ -1,5 +1,5 @@
 import { createTheme } from '@mui/material/styles';
-import { deepPurple } from '@mui/material/colors'
+import { brown } from '@mui/material/colors'
 
 const typography = {
   fontFamily: [
@@ -19,16 +19,16 @@ const lightTheme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: deepPurple[700],
-      light: deepPurple[100],
-      dark: deepPurple[800],
+      main: brown[700],
+      light: brown[100],
+      dark: brown[800],
     },
     secondary: {
-      main: '#bd07f7',
+      main: '#ad8339',
     },
     background: {
-      default: '#eaeaea',
-      paper: '#fff',
+      default: '#fff9eb',
+      paper: '#fff9eb',
     },
     text: {
       primary: 'rgba(0,0,0,0.89)',
@@ -41,22 +41,21 @@ const darkTheme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main: deepPurple[700],
-      light: deepPurple[600],
-      dark: deepPurple[800],
+      main: brown[700],
+      light: brown[600],
+      dark: brown[800],
     },
     secondary: {
-      main: '#bd07f7',
+      main: '#fff9eb',
     },
     background: {
-      default: '#252030',
-      paper: '#111',
+      default: '#4f2f00',
+      paper: '#4f2f00',
     },
     text: {
       primary: 'rgba(255,255,255,0.89)',
     },
   },
-  
   typography
 });
 

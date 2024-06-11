@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Container, CssBaseline, Grid } from '@mui/material';
+import { Typography, Container, CssBaseline, Grid, Box } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { usePage } from '../hooks/usePage';
 import CustomizedAppBar from '../components/CustomizedAppBar';
@@ -26,26 +26,41 @@ function HomePage() {
 
       {/* main content */}
       <Container maxWidth='md' sx={{ marginTop: '80px' }}>
-        <Typography variant="h3" align='center' gutterBottom>
-          Welcome to Trustride
-        </Typography>
-        <Typography variant="body1" align='center' gutterBottom>
-          Secure and reliable taxi service matching platform using Decentralized Identity (DID).
-        </Typography>
-        <Grid container spacing={2} sx={{justifyContent: 'space-between', marginTop: '20px'}}>
-          {
-            functionBlocks.map((block, id) => (
-              <Grid key={id} item lg={3} xs={12} align='center'>
-                <FunctionBlock 
-                  title={block.title} 
-                  to={block.to}
-                  image={block.image}
-                  color={'transparent'}
-                />
-              </Grid>
-            ))
-          }
-        </Grid>
+        <Box 
+          sx={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            alignItems: 'center', 
+            justifyContent: 'center', 
+            height: '80vh',
+            width: '100%'
+          }}
+        >
+          <Typography variant="h1" sx={{ 
+            textAlign: 'center', 
+            fontWeight: 'bold' 
+          }} gutterBottom>
+            Welcome to TrustRide
+          </Typography>
+          <Typography variant="h4" align='center' sx={{color: 'secondary.main'}} gutterBottom>
+            A secure and reliable taxi service matching platform. 
+            {/* using Decentralized Identity (DID). */}
+          </Typography>
+          <Grid container spacing={2} sx={{justifyContent: 'space-between', marginTop: '20px'}}>
+            {
+              functionBlocks.map((block, id) => (
+                <Grid key={id} item lg={3} xs={12} align='center'>
+                  <FunctionBlock 
+                    title={block.title} 
+                    to={block.to}
+                    image={block.image}
+                    color={'transparent'}
+                  />
+                </Grid>
+              ))
+            }
+          </Grid>
+        </Box>
       </Container>
     </ThemeProvider>
   );
