@@ -31,26 +31,21 @@ export default function SignUp() {
   const [errorMessage, setErrorMessage] = useState('');
   const [wrong, setWrong] = useState(false);
   const [identity, setIdentity] = useState('');
+  const [hasDIDField, setHasDIDField] = useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      identity: data.get("identity"),
-      firstName: data.get("firstName"),
-      lastName: data.get("lastName"),
-      DIDid: data.get("DIDid"),
-      email: data.get("email"),
-      password: data.get("password")
-    });
-    if (data.get("firstName") === ''|| data.get("lastName") === '' || data.get("DIDid") === ''||
-      data.get("email") === '' || data.get("password") === '') {
+    const info = Object.fromEntries(data.entries());
+    if (info.identity === "passenger") info.DIDid = "unused";
+    console.log(info)
+    if (Object.values(info).some(value => value === "")) {
       setErrorMessage("All fields must be filled!")
       setWrong(true);
       return;
     }
     
-    const { state, err } = await signUp(data.get("identity"), data.get("firstName"), data.get("lastName"), data.get("DIDid"), data.get("email"), data.get("password"));
+    const { state, err } = await signUp(info);
     if (state === 'success') navigate('/sign_in');
     else {
       setErrorMessage(err);
@@ -99,7 +94,10 @@ export default function SignUp() {
                     name="identity"
                     label="Identity"
                     value={identity}
-                    onChange={(event) => setIdentity(event.target.value)}
+                    onChange={(event) => {
+                      setIdentity(event.target.value);
+                      setHasDIDField(event.target.value !== 'passenger');
+                    }}
                   >
                     <MenuItem value='passenger'>乘客</MenuItem>
                     <MenuItem value='driver'>司機</MenuItem>
@@ -127,7 +125,7 @@ export default function SignUp() {
                   autoComplete="family-name"
                 />
               </Grid>
-              <Grid item xs={12}>
+              {hasDIDField && <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
@@ -135,7 +133,7 @@ export default function SignUp() {
                   label="DIDid"
                   name="DIDid"
                 />
-              </Grid>
+              </Grid>}
               <Grid item xs={12}>
                 <TextField
                   required
