@@ -1,5 +1,5 @@
 import { createServer } from 'node:http';
-import { createYoga } from 'graphql-yoga';
+import { createSchema, createYoga } from 'graphql-yoga';
 import { readFileSync } from 'fs';
 import resolvers from './resolvers.js';
 import connectDB from './mongo.js'; // Import the database connection function
@@ -11,13 +11,13 @@ connectDB();
 const typeDefs = readFileSync('./src/graphql/schema.graphql', 'utf8');
 
 const yoga = createYoga({
-  schema: {
+  schema: createSchema({
     typeDefs,
     resolvers,
-    context: {
-      DriverModel
-    }
-  },
+  }),
+  context: {
+    DriverModel
+  }
 });
 
 // Pass it into a server to hook into request handlers.

@@ -43,20 +43,20 @@ export default function SignUp() {
       email: data.get("email"),
       password: data.get("password")
     });
-    if (data.get("firstName") === ''|| data.get("lastName") === '' || 
+    if (data.get("firstName") === ''|| data.get("lastName") === '' || data.get("DIDid") === ''||
       data.get("email") === '' || data.get("password") === '') {
       setErrorMessage("All fields must be filled!")
       setWrong(true);
       return;
     }
     
-    const { state, err, type } = await signUp(data.get("firstName"), data.get("lastName"), data.get("email"), data.get("password"));
+    const { state, err } = await signUp(data.get("identity"), data.get("firstName"), data.get("lastName"), data.get("DIDid"), data.get("email"), data.get("password"));
     if (state === 'success') navigate('/sign_in');
-    else if (type === 'USED-EMAIL') {
-      setErrorMessage('The email has been used.');
+    else {
+      setErrorMessage(err);
       setWrong(true);
+      console.error(err);  
     }
-    else console.error(err);  
   };
 
   return (

@@ -9,7 +9,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { lightTheme, darkTheme } from "../Theme";
 import { usePage } from '../hooks/usePage';
 import taxiImg from '../img/taxi.png'
-//import { useSignIn } from '../Utilities/sign';
+import { useSignIn } from '../utilities/sign';
 //import { usePassword } from '../Utilities/usePassword';
 
 function Copyright(props) {
@@ -25,11 +25,11 @@ function Copyright(props) {
   );
 }
 
-export default function SignInSide() {
-  const { setUserName, setUserID, setSignedIn, setUserEmail } = usePage();
+export default function SignIn() {
+  // const { setUserName, setIdentity, setSignedIn, setUserEmail } = usePage();
   const navigate = useNavigate();
   const location = useLocation();
-  ///const signIn = useSignIn();
+  const signIn = useSignIn();
   const [errorMessage, setErrorMessage] = useState(' ');
   const [wrong, setWrong] = useState(false);
   const [forget, setForget] = useState(false);
@@ -41,23 +41,24 @@ export default function SignInSide() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    /*
-    const {state, player, err, type} = await signIn(data.get('email'), data.get('password'));
+    console.log({
+      identity:data.get('identity'), email:data.get('email'), password:data.get('password')
+    })
+    const {state, driver, err } = await signIn(data.get('identity'), data.get('email'), data.get('password'));
     if (state === 'success') {
-      setUserEmail(data.get('email'));
-      setUserName(player.name);
-      setUserID(player.ID);
-      localStorage.setItem('userID', player.ID);
-      localStorage.setItem('userName', player.name);
-      setSignedIn(true);
-      navigate(location?.state?.prevPath? location.state.prevPath : '/homepage');
-    }else if (type === 'NOTFOUND-PLAYER') {
-      setErrorMessage("Account not found!");
-      setWrong(true);
-    }else if (type === 'PASSWORD-ERROR') {
-      setErrorMessage('Wrong password!');
-      setWrong(true);
-    }else console.error(err);*/
+      // setUserEmail(data.get('email'));
+      // setUserName(player.name);
+      // setUserID(player.ID);
+      // localStorage.setItem('userID', player.ID);
+      // localStorage.setItem('userName', player.name);
+      // setSignedIn(true);
+      console.log(driver);
+      navigate(location?.state?.prevPath? location.state.prevPath : '/');
+    }else {
+      //setErrorMessage(err);
+      //setWrong(true);
+      console.error(err);
+    }
   };
 
   const handleForget = async() => {
