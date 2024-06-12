@@ -26,7 +26,7 @@ function Copyright(props) {
 }
 
 export default function SignIn() {
-  // const { setUserName, setIdentity, setSignedIn, setUserEmail } = usePage();
+  const { identity, setIdentity, setSignedIn } = usePage();
   const navigate = useNavigate();
   const location = useLocation();
   const signIn = useSignIn();
@@ -34,29 +34,28 @@ export default function SignIn() {
   const [wrong, setWrong] = useState(false);
   const [forget, setForget] = useState(false);
   const [emailField,setEmailField] = useState("");
-  const [identity, setIdentity] = useState("");
-
-  //const {missPassword} = usePassword();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      identity:data.get('identity'), email:data.get('email'), password:data.get('password')
-    })
-    const {state, driver, err } = await signIn(data.get('identity'), data.get('email'), data.get('password'));
+    const info = {
+      identity: data.get('identity'),
+      email: data.get('email'),
+      password: data.get('password')
+    }
+    const {state, name, err } = await signIn(info.identity, info.email, info.password);
     if (state === 'success') {
       // setUserEmail(data.get('email'));
       // setUserName(player.name);
       // setUserID(player.ID);
       // localStorage.setItem('userID', player.ID);
       // localStorage.setItem('userName', player.name);
-      // setSignedIn(true);
-      console.log(driver);
+      setIdentity(info.identity);
+      setSignedIn(true);
       navigate(location?.state?.prevPath? location.state.prevPath : '/');
     }else {
-      //setErrorMessage(err);
-      //setWrong(true);
+      setErrorMessage(err);
+      setWrong(true);
       console.error(err);
     }
   };
@@ -129,7 +128,7 @@ export default function SignIn() {
                   id="select"
                   name="identity"
                   label="Identity"
-                  value={identity}
+                  value={identity === "passenger" || identity === "driver"? identity:''}
                   onChange={(event) => setIdentity(event.target.value)}
                 >
                   <MenuItem value='passenger'>乘客</MenuItem>

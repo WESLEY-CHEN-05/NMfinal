@@ -4,6 +4,7 @@ import { readFileSync } from 'fs';
 import resolvers from './resolvers.js';
 import connectDB from './mongo.js'; // Import the database connection function
 import DriverModel from './model/Driver.js';
+import PassengerModel from './model/Passenger.js';
 
 // Initialize the database connection
 connectDB();
@@ -16,7 +17,8 @@ const yoga = createYoga({
     resolvers,
   }),
   context: {
-    DriverModel
+    DriverModel,
+    PassengerModel,
   }
 });
 

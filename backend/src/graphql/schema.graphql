@@ -26,9 +26,11 @@ type Query {
   getDrivers: [Driver!]!
   getDriver(DIDid: ID!): Driver
   getDriverByEmail(email: String!): Driver
+  getPassengerByEmail(email: ID!): Passenger
 }
 
 type Mutation {
   addDriver(firstName: String!, lastName: String!, DIDid: ID!, email:String!, password:String!): Driver
-  updateSignedIn(identity: String!, state:Boolean!, email:String!, password:String!):Driver
+  addPassenger(firstName: String!, lastName: String!, email:ID!, password:String!): Passenger
+  updateSignedIn(identity: String!, state:Boolean!, email:String!, password:String!): String
 }
