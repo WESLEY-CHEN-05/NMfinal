@@ -4,7 +4,12 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 import { usePage } from '../hooks/usePage';
+import { useBackend } from '../hooks/useBackend';
+import { v4 as uuidv4 } from 'uuid';
+import { WebsiteProvider, useWebsite } from '../hooks/WebsiteContext';
 
 const style = {
   position: 'absolute',
@@ -21,26 +26,73 @@ const style = {
 
 export default function BasicModal({ issuerDID, subjectDID, name }) {
   const [open, setOpen] = React.useState(false);
+  const [passengerOpen, setPassengerOpen] = React.useState(false);
   const [jwtKeyID, setJwtKeyID] = React.useState('');
+  const [openSnackbar, setOpenSnackbar] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const handlePassengerOpen = () => setPassengerOpen(true);
+
+
+  const { issueVC, sendNonce } = useBackend();
+  const { credentialJwt, nonce, setNonce } = useWebsite();
+  
 
   const { identity } = usePage();
 
   const handleIssue = () => {
     console.log(`Issuer: ${issuerDID}, Subject: ${subjectDID}, Name: ${name}, JwtKeyID: ${jwtKeyID}`);
+    // issueVC(issuerDID, subjectDID, name, jwtKeyID);
+    const _issuerDID = "did:iota:tst:0xfda28bbf862c9efcb67d16ca980b3703d3eee827e82d52d6a977a545ecb2ef5f";
+    const _subjectDID = "did:iota:tst:0xae010b9df3261a233ac572246ca98bd098f415cd1b9611129606f17a0111f62e";
+    const _privateKey = "paL-Ja24J4py_-xzvXXS3mVu53fJSc9VZPSViOTU-p8";
+    const _name = "Wesley Chen";
+    issueVC(_issuerDID, _subjectDID, _name, _privateKey);
     setOpen(false);
   };
 
+  const handleVerify = () => {
+    const _nonce = uuidv4();
+    const _subjectDID = "did:iota:tst:0xae010b9df3261a233ac572246ca98bd098f415cd1b9611129606f17a0111f62e";
+    setNonce(_nonce);
+    console.log(_nonce);
+    setPassengerOpen(false);
+  };
+
+
+  // React.useEffect(() => {
+  //   console.log("Nonce:", nonce);
+  //   if (identity !== "issuer") setDriverOpen(true);
+  // }, [nonce]);
+
+  React.useEffect(() => {
+    console.log("Updated credentialJwt:", credentialJwt);
+    if (credentialJwt !== "") setOpenSnackbar(true);
+    if (identity === "issuer");
+    console.log(openSnackbar);
+  }, [credentialJwt]);
+
+  // const handleCloseSnackbar = (event, reason) => {
+  //   if (reason === 'clickaway') {
+  //     return;
+  //   }
+  //   setOpenSnackbar(false);
+  // };
+
   return (
     <div>
-      {identity !== 'issuer' ? (
+      {identity === 'issuer' ? (
         <Button variant="contained" style={{ backgroundColor: '#D2B48C', color: '#000' }} onClick={handleOpen}>
           Issue
         </Button>
-      ) : null}
+      ) : <></>}
+      {identity !== 'issuer' ? (
+        <Button variant="contained" style={{ backgroundColor: '#D2B48C', color: '#000' }} onClick={handlePassengerOpen}>
+          Verify
+        </Button>
+      ) : <></>}
       <Modal
-        open={open}
+        open={open || passengerOpen}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
@@ -58,20 +110,39 @@ export default function BasicModal({ issuerDID, subjectDID, name }) {
           <Typography id="modal-modal-title" variant="h6" component="h2" marginBottom={3} sx={{ fontSize: '18px', fontWeight: 400}}>
             Subject Name: {name}
           </Typography>
-          <TextField
-            label="JwtKey"
-            variant="outlined"
-            fullWidth
-            value={jwtKeyID}
-            onChange={(e) => setJwtKeyID(e.target.value)}
-            margin="normal"
-            style={{ marginBottom: '24px' }} // 增加更多空間
-          />
-          <Button variant="contained" color="secondary" onClick={handleIssue} fullWidth>
-            Issue
-          </Button>
+
+          { (identity === 'issuer') ?
+            <>
+              <TextField
+                label="JwtKey"
+                variant="outlined"
+                fullWidth
+                value={jwtKeyID}
+                onChange={(e) => setJwtKeyID(e.target.value)}
+                margin="normal"
+                style={{ marginBottom: '24px' }} // 增加更多空間
+              />
+              <Button variant="contained" color="secondary" onClick={handleIssue} fullWidth>
+                Issue
+              </Button> 
+            </>
+            :
+              <Button variant="contained" color="secondary" onClick={handleVerify} fullWidth>
+                Verify
+              </Button> 
+          }
         </Box>
       </Modal>
+      {/* <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
+          驗證成功！
+        </Alert>
+      </Snackbar> */}
     </div>
   );
 }
