@@ -25,9 +25,11 @@ const sendData = (data, ws) =>{
     // console.log('send data called in getFunc.');
 }
 
-export const validateVP = async (nonce, proofJwkString) => {
+export const validateVP = async (nonce, proofJwkString, ws) => {
 
     try {
+
+        console.log(nonce, proofJwkString);
 
         const presentationJwt = new Jwt(proofJwkString);
 

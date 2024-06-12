@@ -34,8 +34,8 @@ export default function BasicModal({ issuerDID, subjectDID, name }) {
   const handlePassengerOpen = () => setPassengerOpen(true);
 
 
-  const { issueVC, sendNonce } = useBackend();
-  const { credentialJwt, nonce, setNonce } = useWebsite();
+  const { issueVC, sendNonce, challenge } = useBackend();
+  const { credentialJwt, presentationJwt, nonce, setNonce } = useWebsite();
   
 
   const { identity } = usePage();
@@ -50,6 +50,15 @@ export default function BasicModal({ issuerDID, subjectDID, name }) {
     issueVC(_issuerDID, _subjectDID, _name, _privateKey);
     setOpen(false);
   };
+
+  const handleVP = () => {
+    const _nonce = uuidv4();
+    const _subjectDID = "did:iota:tst:0xae010b9df3261a233ac572246ca98bd098f415cd1b9611129606f17a0111f62e";
+    const _subjectPrivateKey = "Q3O9gmepFS6KAl5GpYs2CzZLeacfpZFdKU8JYPdf4Yg";
+    const _credentialJwtString = "eyJraWQiOiJkaWQ6aW90YTp0c3Q6MHhmZGEyOGJiZjg2MmM5ZWZjYjY3ZDE2Y2E5ODBiMzcwM2QzZWVlODI3ZTgyZDUyZDZhOTc3YTU0NWVjYjJlZjVmI2tleS0xIiwidHlwIjoiSldUIiwiYWxnIjoiRWREU0EifQ.eyJpc3MiOiJkaWQ6aW90YTp0c3Q6MHhmZGEyOGJiZjg2MmM5ZWZjYjY3ZDE2Y2E5ODBiMzcwM2QzZWVlODI3ZTgyZDUyZDZhOTc3YTU0NWVjYjJlZjVmIiwibmJmIjoxNzE4MDg5NDIyLCJqdGkiOiJodHRwczovL3d3dy50YWl3YW50YXhpLmNvbS50dy8iLCJzdWIiOiJkaWQ6aW90YTp0c3Q6MHhhZTAxMGI5ZGYzMjYxYTIzM2FjNTcyMjQ2Y2E5OGJkMDk4ZjQxNWNkMWI5NjExMTI5NjA2ZjE3YTAxMTFmNjJlIiwidmMiOnsiQGNvbnRleHQiOiJodHRwczovL3d3dy53My5vcmcvMjAxOC9jcmVkZW50aWFscy92MSIsInR5cGUiOlsiVmVyaWZpYWJsZUNyZWRlbnRpYWwiLCJUYXhpRHJpdmVyQ3JlZGVudGlhbCJdLCJjcmVkZW50aWFsU3ViamVjdCI6eyJsaWNlbnNlIjoiQ2VydGlmaWVkIFRheGkgRHJpdmVyIiwibmFtZSI6Ildlc2xleSBDaGVuIn19fQ.ib8RFBKr6Ydd_BM_25oJ_y42Rz1B0p63nQjL3xDP0EGnV7zqILThDax2VDUQT7CgctxDUUR1mFih4LA8BlFPCQ";
+
+    challenge(_nonce, _subjectDID, _subjectPrivateKey, _credentialJwtString);
+  }
 
   const handleVerify = () => {
     const _nonce = uuidv4();
@@ -72,6 +81,11 @@ export default function BasicModal({ issuerDID, subjectDID, name }) {
     console.log(openSnackbar);
   }, [credentialJwt]);
 
+  
+  React.useEffect(() => {
+    console.log("Updated presentationJwt:", presentationJwt);
+    console.log(presentationJwt);
+  }, [presentationJwt]);
   // const handleCloseSnackbar = (event, reason) => {
   //   if (reason === 'clickaway') {
   //     return;
@@ -86,13 +100,13 @@ export default function BasicModal({ issuerDID, subjectDID, name }) {
           Issue
         </Button>
       ) : <></>}
-      {identity !== 'issuer' ? (
+      {/* {identity === 'passenger' ? (
         <Button variant="contained" style={{ backgroundColor: '#D2B48C', color: '#000' }} onClick={handlePassengerOpen}>
           Verify
         </Button>
-      ) : <></>}
+      ) : <></>} */}
       <Modal
-        open={open || passengerOpen}
+        open={open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
@@ -127,10 +141,22 @@ export default function BasicModal({ issuerDID, subjectDID, name }) {
               </Button> 
             </>
             :
-              <Button variant="contained" color="secondary" onClick={handleVerify} fullWidth>
-                Verify
-              </Button> 
+            <></>
           }
+          {/* { (identity === 'driver') ?
+            <Button variant="contained" color="secondary" onClick={handleVP} fullWidth>
+              Generate VP
+            </Button> 
+            :
+            <></>
+          }
+          { (identity === 'passenger') ?
+            <Button variant="contained" color="secondary" onClick={handleVerify} fullWidth>
+              Verify
+            </Button> 
+            :
+            <></>
+          } */}
         </Box>
       </Modal>
       {/* <Snackbar

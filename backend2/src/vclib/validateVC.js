@@ -14,7 +14,7 @@ const sendData = (data, ws) =>{
     // console.log('send data called in getFunc.');
 }
 
-export const validateVC = async(issuerDID, credentialJwtString) => {
+export const validateVC = async(issuerDID, credentialJwtString, ws) => {
 
     try {
         const credentialJwt = new Jwt(credentialJwtString);

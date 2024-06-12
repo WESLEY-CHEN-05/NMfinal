@@ -3,7 +3,7 @@ const sendData = (data, ws) =>{
     // console.log('send data called in getFunc.');
 }
 
-export const sendNonce = async (nonce) => {
+export const sendNonce = async (nonce, ws) => {
     sendData(["sendNonce", nonce], ws);
 }
 

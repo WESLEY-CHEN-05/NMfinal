@@ -5,7 +5,7 @@ const sendData = (data, ws) =>{
     // console.log('send data called in getFunc.');
 }
 
-export const validateDID = async (DID) => {
+export const validateDID = async (DID, ws) => {
     try {
         await iotaResolution(DID);
         sendData(["validateDID", "true"], ws);

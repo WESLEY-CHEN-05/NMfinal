@@ -23,7 +23,7 @@ const sendData = (data, ws) =>{
 // The API endpoint of an IOTA node, e.g. Hornet.
 const API_ENDPOINT = "http://140.112.18.206:14265";
 
-export const challenge = async (nonce, subjectDID, subjectPrivateKey, subjectJwtString) => {
+export const challenge = async (nonce, subjectDID, subjectPrivateKey, subjectJwtString, ws) => {
 
     const subjectDocument = await iotaResolution(subjectDID);
     const subjectFragment = "key-1";
