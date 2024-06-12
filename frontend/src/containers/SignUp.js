@@ -96,7 +96,7 @@ export default function SignUp() {
                     value={identity}
                     onChange={(event) => {
                       setIdentity(event.target.value);
-                      setHasDIDField(event.target.value === 'driver');
+                      setHasDIDField(event.target.value !== 'passenger');
                     }}
                   >
                     <MenuItem value='passenger'>乘客</MenuItem>

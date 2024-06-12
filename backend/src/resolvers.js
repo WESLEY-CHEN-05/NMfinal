@@ -2,7 +2,6 @@ import { GraphQLError } from 'graphql';
 import bcrypt from "bcrypt";
 import CryptoJS from 'crypto-js';
 import { validateDID } from "../../vclib/validateDID.js"
-import PassengerModel from './model/Passenger.js';
 
 const saltRounds = 10;
 const resolvers = {
@@ -57,6 +56,32 @@ const resolvers = {
         throw new GraphQLError(e);
       }
     },
+    addIssuer: async(_, { firstName, lastName, DIDid, password: ciphertext, email }, { IssuerModel })=>{
+      try{
+        const emailExists = await IssuerModel.findOne({email});
+        if (emailExists) throw new GraphQLError("The email is used");
+        const DIDisVaild = await validateDID(DIDid);
+        if (!DIDisVaild) throw new GraphQLError("DIDid is not valid");
+        
+        const bytes  = CryptoJS.AES.decrypt(ciphertext, 'NMfinalalalala');
+        const password = bytes.toString(CryptoJS.enc.Utf8);
+        // console.log({name, password, email});
+        const hash = await bcrypt.hash(password, saltRounds)
+          // Store hash in your password DB.
+        const issuer = await new IssuerModel({
+              DIDid,
+              firstName,
+              lastName,
+              password: hash,
+              email,
+              signedIn: false,
+            }).save();
+        return issuer;
+      }catch(e){
+        if(e instanceof GraphQLError)throw e;
+        throw new GraphQLError(e);
+      }
+    },
     addPassenger: async(_, { firstName, lastName, password: ciphertext, email }, { PassengerModel })=>{
       try{
         const emailExists = await PassengerModel.findOne({email});
@@ -80,19 +105,20 @@ const resolvers = {
         throw new GraphQLError(e);
       }
     },
-    updateSignedIn:async(_,{identity, state, email, password:ciphertext}, {DriverModel, PassengerModel})=>{
+    updateSignedIn:async(_,{identity, state, email, password:ciphertext}, {DriverModel, PassengerModel, IssuerModel})=>{
       try{
         let person;
         console.log(email);
         console.log(identity);
         if (identity === "driver") person = await DriverModel.findOne({email});
+        else if (identity === "issuer") person = await IssuerModel.findOne({email});
         else if (identity === "passenger") person = await PassengerModel.findOne({email});
         if(!person) throw new GraphQLError(`account not found`);
         console.log(person);
         if(!state){//sign out
           person.signedIn = state;
           await person.save();
-          return person.name
+          return person.firstNamename;
         }
         const bytes  = CryptoJS.AES.decrypt(ciphertext, 'NMfinalalalala');
         const password = bytes.toString(CryptoJS.enc.Utf8);

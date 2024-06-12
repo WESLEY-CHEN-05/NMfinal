@@ -11,6 +11,17 @@ export const ADD_DRIVER = gql`
     }
   }
 `;
+export const ADD_ISSUER = gql`
+  mutation AddIssuer($firstName: String!, $lastName: String!, $DIDid: ID!, $email: String!, $password: String!) {
+    addIssuer(firstName: $firstName, lastName: $lastName, DIDid: $DIDid, email: $email, password: $password) {
+      firstName
+      lastName
+      DIDid
+      email
+      password
+    }
+  }
+`;
 export const ADD_PASSENGER = gql`
   mutation AddPassenger($firstName: String!, $lastName: String!, $email: ID!, $password: String!) {
     addPassenger(firstName: $firstName, lastName: $lastName, email: $email, password: $password) {

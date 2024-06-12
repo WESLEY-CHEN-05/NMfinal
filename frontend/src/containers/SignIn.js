@@ -26,7 +26,7 @@ function Copyright(props) {
 }
 
 export default function SignIn() {
-  const { identity, setIdentity, setSignedIn } = usePage();
+  const { identity, setIdentity, setSignedIn, setUserName } = usePage();
   const navigate = useNavigate();
   const location = useLocation();
   const signIn = useSignIn();
@@ -52,6 +52,7 @@ export default function SignIn() {
       // localStorage.setItem('userName', player.name);
       setIdentity(info.identity);
       setSignedIn(true);
+      setUserName(name)
       navigate(location?.state?.prevPath? location.state.prevPath : '/');
     }else {
       setErrorMessage(err);
@@ -128,11 +129,12 @@ export default function SignIn() {
                   id="select"
                   name="identity"
                   label="Identity"
-                  value={identity === "passenger" || identity === "driver"? identity:''}
+                  value={identity === "passenger" || identity === "driver" || identity === "issuer"? identity:''}
                   onChange={(event) => setIdentity(event.target.value)}
                 >
                   <MenuItem value='passenger'>乘客</MenuItem>
                   <MenuItem value='driver'>司機</MenuItem>
+                  <MenuItem value='issuer'>發政單位</MenuItem>
                 </Select>
               </FormControl>
               <TextField

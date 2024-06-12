@@ -23,6 +23,18 @@ export const GET_DRIVER_BY_EMAIL = gql`
         }
     }
 `;
+export const GET_ISSUER_BY_EMAIL = gql`
+    query getIssuerByEmail($email: String!) {
+        getIssuerByEmail(email: $email) {
+            DIDid
+            firstName
+            lastName
+            email
+            password
+            signedIn
+        }
+    }
+`;
 export const GET_PASSENGER_BY_EMAIL = gql`
     query getPassengerByEmail($email: ID!) {
         getPassengerByEmail(email: $email) {

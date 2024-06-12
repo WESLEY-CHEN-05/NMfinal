@@ -1,11 +1,12 @@
-import { ADD_DRIVER, ADD_PASSENGER, UPDATESIGNEDIN_MUTATION} from "../graphql/mutation";
-import { GET_DRIVER_BY_EMAIL, GET_PASSENGER_BY_EMAIL } from "../graphql/query";
+import { ADD_DRIVER, ADD_PASSENGER, ADD_ISSUER, UPDATESIGNEDIN_MUTATION} from "../graphql/mutation";
+import { GET_DRIVER_BY_EMAIL, GET_PASSENGER_BY_EMAIL, GET_ISSUER_BY_EMAIL } from "../graphql/query";
 import { useMutation,useLazyQuery } from "@apollo/client";
 import AES from 'crypto-js/aes';
 
 export function useSignUp(){
     const [addDriver] = useMutation(ADD_DRIVER);
     const [addPassenger] = useMutation(ADD_PASSENGER);
+    const [addIssuer] = useMutation(ADD_ISSUER);
     return async function({identity, firstName, lastName, DIDid, email, password}){
         try{
             const encryptPassword = AES.encrypt(password, 'NMfinalalalala').toString();
@@ -13,6 +14,9 @@ export function useSignUp(){
             if (identity === "driver") {
                 const {data} = await addDriver({variables:{firstName, lastName, DIDid, email, password: encryptPassword}});
                 return {state:'success',data:data?.addDriver};
+            } else if (identity === "issuer") {
+                const {data} = await addIssuer({variables:{firstName, lastName, DIDid, email, password: encryptPassword}});
+                return {state:'success',data:data?.addIssuer};
             } else {
                 const {data} = await addPassenger({variables:{firstName, lastName, email, password: encryptPassword}});
                 return {state:'success',data:data?.addPassenger};
@@ -27,11 +31,15 @@ export function useSignUp(){
 export function useSignIn(){
     const [getDriverByEmail] = useLazyQuery(GET_DRIVER_BY_EMAIL);
     const [getPassengerByEmail] = useLazyQuery(GET_PASSENGER_BY_EMAIL);
+    const [getIssuerByEmail] = useLazyQuery(GET_ISSUER_BY_EMAIL);
     const [updateSignedIn] = useMutation(UPDATESIGNEDIN_MUTATION);
     return async function(identity, email, password){
         try{
             if (identity === 'driver') {
                 const {error} = await getDriverByEmail({variables:{email}});
+                if (error) throw error;
+            } else if (identity === "issuer") {
+                const {error} = await getIssuerByEmail({variables:{email}});
                 if (error) throw error;
             } else if (identity === 'passenger') {
                 const {error} = await getPassengerByEmail({variables:{email}});
@@ -39,7 +47,7 @@ export function useSignIn(){
             }
             const encryptPassword = AES.encrypt(password, 'NMfinalalalala').toString();
             const {data:result} = await updateSignedIn({variables:{identity, state:true, email,  password:encryptPassword}});
-            return {state:'success', name: result};
+            return {state:'success', name: result?.updateSignedIn};
         }catch(err){
             console.log(err.message);
             return {state:'error', err: err.message };
