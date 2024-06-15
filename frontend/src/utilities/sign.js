@@ -47,7 +47,7 @@ export function useSignIn(){
             }
             const encryptPassword = AES.encrypt(password, 'NMfinalalalala').toString();
             const {data:result} = await updateSignedIn({variables:{identity, state:true, email,  password:encryptPassword}});
-            return {state:'success', name: result?.updateSignedIn};
+            return {state:'success', result: result?.updateSignedIn};
         }catch(err){
             console.log(err.message);
             return {state:'error', err: err.message };

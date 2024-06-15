@@ -35,6 +35,11 @@ export const ADD_PASSENGER = gql`
 
 export const UPDATESIGNEDIN_MUTATION = gql`
     mutation updateSignedIn($identity:String!, $state:Boolean!, $email:String!, $password:String!){
-        updateSignedIn(identity:$identity, state:$state, email:$email, password:$password)
+        updateSignedIn(identity:$identity, state:$state, email:$email, password:$password) {
+          DIDid
+          firstName
+          lastName
+          email
+        }
     }
 `;

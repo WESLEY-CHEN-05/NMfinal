@@ -105,7 +105,7 @@ const resolvers = {
         throw new GraphQLError(e);
       }
     },
-    updateSignedIn:async(_,{identity, state, email, password:ciphertext}, {DriverModel, PassengerModel, IssuerModel})=>{
+    updateSignedIn:async(_,{identity, state, email, password:ciphertext}, {DriverModel, PassengerModel, IssuerModel, UserModel})=>{
       try{
         let person;
         console.log(email);
@@ -118,7 +118,7 @@ const resolvers = {
         if(!state){//sign out
           person.signedIn = state;
           await person.save();
-          return person.firstNamename;
+          return person.firstName;
         }
         const bytes  = CryptoJS.AES.decrypt(ciphertext, 'NMfinalalalala');
         const password = bytes.toString(CryptoJS.enc.Utf8);
@@ -127,7 +127,13 @@ const resolvers = {
         if(!result)throw new GraphQLError(`The password is not correct`);
         person.signedIn = state;
         await person.save();
-        return person.firstName;
+        const user = await new UserModel({
+          DIDid: person.DIDid,
+          firstName: person.firstName,
+          lastName: person.lastName,
+          email: person.email
+        }).save()
+        return person;
   
       }catch(e){
         if(e instanceof GraphQLError)throw e;

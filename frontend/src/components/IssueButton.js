@@ -47,7 +47,7 @@ export default function BasicModal({ issuerDID, subjectDID, name }) {
     const _subjectDID = "did:iota:tst:0xae010b9df3261a233ac572246ca98bd098f415cd1b9611129606f17a0111f62e";
     const _privateKey = "paL-Ja24J4py_-xzvXXS3mVu53fJSc9VZPSViOTU-p8";
     const _name = "Wesley Chen";
-    issueVC(_issuerDID, _subjectDID, _name, _privateKey);
+    issueVC(issuerDID, subjectDID, name, jwtKeyID);
     setOpen(false);
   };
 
@@ -86,12 +86,12 @@ export default function BasicModal({ issuerDID, subjectDID, name }) {
     console.log("Updated presentationJwt:", presentationJwt);
     console.log(presentationJwt);
   }, [presentationJwt]);
-  // const handleCloseSnackbar = (event, reason) => {
-  //   if (reason === 'clickaway') {
-  //     return;
-  //   }
-  //   setOpenSnackbar(false);
-  // };
+  const handleCloseSnackbar = (event, reason) => {
+     if (reason === 'clickaway') {
+      return;
+     }
+     setOpenSnackbar(false);
+  };
 
   return (
     <div>
@@ -115,10 +115,10 @@ export default function BasicModal({ issuerDID, subjectDID, name }) {
           <Typography id="modal-modal-title" variant="h5" component="h2" marginBottom={2} sx={{ fontWeight: 600 }}>
             Issue Credential
           </Typography>
-          <Typography id="modal-modal-title" variant="h6" component="h2" marginBottom={2} sx={{ fontSize: '18px', fontWeight: 400}}>
+          <Typography id="modal-modal-title" variant="h6" component="h2" marginBottom={2} sx={{ fontSize: '18px', fontWeight: 400, wordWrap: 'break-word'}}>
             Issuer DID: {issuerDID}
           </Typography>
-          <Typography id="modal-modal-title" variant="h6" component="h2" marginBottom={2} sx={{ fontSize: '18px', fontWeight: 400}}>
+          <Typography id="modal-modal-title" variant="h6" component="h2" marginBottom={2} sx={{ fontSize: '18px', fontWeight: 400, wordWrap: 'break-word'}}>
             Subject DID: {subjectDID}
           </Typography>
           <Typography id="modal-modal-title" variant="h6" component="h2" marginBottom={3} sx={{ fontSize: '18px', fontWeight: 400}}>
@@ -159,16 +159,16 @@ export default function BasicModal({ issuerDID, subjectDID, name }) {
           } */}
         </Box>
       </Modal>
-      {/* <Snackbar
+      <Snackbar
         open={openSnackbar}
         autoHideDuration={6000}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         onClose={handleCloseSnackbar}
       >
-        <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
-          驗證成功！
+        <Alert onClose={handleCloseSnackbar} severity="success" sx={{ position: 'fixed'}}>
+         Issue Successfully!
         </Alert>
-      </Snackbar> */}
+      </Snackbar>
     </div>
   );
 }

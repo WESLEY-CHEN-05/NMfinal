@@ -41,7 +41,7 @@ const columns = [
 ];
 
 const rows = [
-  { id: 1, name: 'Jofffn', age: 14, time: new Date(2013, 2, 1) },
+  { id: 1, name: '陳奕安', age: 21, time: new Date(2024, 6, 12) },
   { id: 2, name: 'Cersei', age: 31, time: new Date(2013, 2, 1) },
   { id: 3, name: 'Jaime', age: 31, time: new Date(2013, 3, 1) },
   { id: 4, name: 'Arya', age: 11, time: new Date(2013, 12, 1) },
@@ -66,7 +66,7 @@ export default function DriverData() {
   const [warningDialog, setWarningDialog] = React.useState(false);
   const [driverIsComing, setDriverIsComing] = React.useState(false);
 
-  const { presentationJwk, nonce, setNonce, VPValid } = useWebsite();
+  const { presentationJwt, nonce, setNonce, VPValid } = useWebsite();
 
 //   const handleClickOpen = () => {
 //     setWarningDialog(true);
@@ -94,8 +94,8 @@ export default function DriverData() {
 
   React.useEffect(() => {
     console.log("HIHI");
-    if (presentationJwk !== "") validateVP(nonce, presentationJwk);
-  }, [presentationJwk]);
+    if (presentationJwt !== "") validateVP(nonce, presentationJwt);
+  }, [presentationJwt]);
 
   React.useEffect(() => {
     if (VPValid) setVerificationStatus('verified');

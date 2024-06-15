@@ -26,7 +26,7 @@ function Copyright(props) {
 }
 
 export default function SignIn() {
-  const { identity, setIdentity, setSignedIn, setUserName } = usePage();
+  const { identity, setIdentity, setSignedIn, setUserName, setUserDID, setUserEmail } = usePage();
   const navigate = useNavigate();
   const location = useLocation();
   const signIn = useSignIn();
@@ -43,7 +43,7 @@ export default function SignIn() {
       email: data.get('email'),
       password: data.get('password')
     }
-    const {state, name, err } = await signIn(info.identity, info.email, info.password);
+    const {state, result, err } = await signIn(info.identity, info.email, info.password);
     if (state === 'success') {
       // setUserEmail(data.get('email'));
       // setUserName(player.name);
@@ -51,8 +51,10 @@ export default function SignIn() {
       // localStorage.setItem('userID', player.ID);
       // localStorage.setItem('userName', player.name);
       setIdentity(info.identity);
+      setUserDID(result.DIDid);
       setSignedIn(true);
-      setUserName(name)
+      setUserName(result.firstName);
+      setUserEmail(result.email);
       navigate(location?.state?.prevPath? location.state.prevPath : '/');
     }else {
       setErrorMessage(err);
