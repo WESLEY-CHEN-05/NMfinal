@@ -67,7 +67,8 @@ export async function iotaResolution(didKey) {
 
     } catch (error) {
         console.error("Error resolving DID:", error);
-        throw error; // Rethrow the error if you want it to propagate
+        // throw error; // Rethrow the error if you want it to propagate
+        return null;
     }
 }
 

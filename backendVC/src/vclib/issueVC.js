@@ -23,68 +23,70 @@ const sendData = (data, ws) =>{
 
 export const issueVC = async (issuerDID, subjectDID, subjectName, jwkPrivateKey, ws) => {
 
-    console.log("HELLO");
+    try{
+        const issuerDocument = await iotaResolution(issuerDID);
+        const subjectDocument = await iotaResolution(subjectDID);
 
-    const issuerDocument = await iotaResolution(issuerDID);
-    const subjectDocument = await iotaResolution(subjectDID);
+        // Create a credential subject indicating the degree earned by Alice, linked to their DID.
+        const subject = {
+            id: subjectDocument.id(),
+            name: subjectName,
+            license: "Certified Taxi Driver",
+        };
 
-    // Create a credential subject indicating the degree earned by Alice, linked to their DID.
-    const subject = {
-        id: subjectDocument.id(),
-        name: subjectName,
-        license: "Certified Taxi Driver",
-    };
+        // Create an unsigned `UniversityDegree` credential for Alice
+        const unsignedVc = new Credential({
+            id: "https://www.taiwantaxi.com.tw",
+            type: "TaxiDriverCredential",
+            issuer: issuerDocument.id(),
+            credentialSubject: subject,
+        });
 
-    // Create an unsigned `UniversityDegree` credential for Alice
-    const unsignedVc = new Credential({
-        id: "https://www.taiwantaxi.com.tw",
-        type: "TaxiDriverCredential",
-        issuer: issuerDocument.id(),
-        credentialSubject: subject,
-    });
+        const issuerFragment = "key-1";
 
-    const issuerFragment = "key-1";
+        const methodDigest = new MethodDigest(issuerDocument.methods()[0]);
+        const _jwk_data = ((issuerDocument.methods()[0]).data().toJSON()).publicKeyJwk;
+        const jwk_data = {
+            ..._jwk_data,
+            d: jwkPrivateKey,
+        };
 
-    const methodDigest = new MethodDigest(issuerDocument.methods()[0]);
-    const _jwk_data = ((issuerDocument.methods()[0]).data().toJSON()).publicKeyJwk;
-    const jwk_data = {
-        ..._jwk_data,
-        d: jwkPrivateKey,
-    };
+        const jwk = new Jwk(jwk_data);
+        const jwkstore = new JwkMemStore();
+        const keyID = await jwkstore.insert(jwk);
 
-    const jwk = new Jwk(jwk_data);
-    const jwkstore = new JwkMemStore();
-    const keyID = await jwkstore.insert(jwk);
+        const keyidstore = new KeyIdMemStore();
+        keyidstore.insertKeyId(methodDigest, keyID);
 
-    const keyidstore = new KeyIdMemStore();
-    keyidstore.insertKeyId(methodDigest, keyID);
+        const issuerStorage = new Storage(jwkstore, keyidstore);
 
-    const issuerStorage = new Storage(jwkstore, keyidstore);
+        // console.log(unsignedVc);
 
-    // console.log(unsignedVc);
+        // Create signed JWT credential.
+        const credentialJwt = await issuerDocument.createCredentialJwt(
+            issuerStorage,
+            issuerFragment,
+            unsignedVc,
+            new JwsSignatureOptions(),
+        );
 
-    // Create signed JWT credential.
-    const credentialJwt = await issuerDocument.createCredentialJwt(
-        issuerStorage,
-        issuerFragment,
-        unsignedVc,
-        new JwsSignatureOptions(),
-    );
+        // console.log(credentialJwt.toJSON());
 
-    // console.log(credentialJwt.toJSON());
+        const res = new JwtCredentialValidator(new EdDSAJwsVerifier()).validate(
+            credentialJwt,
+            issuerDocument,
+            new JwtCredentialValidationOptions(),
+            FailFast.FirstError,
+        );
+        // console.log("credentialjwt validation", res.intoCredential());
 
-    const res = new JwtCredentialValidator(new EdDSAJwsVerifier()).validate(
-        credentialJwt,
-        issuerDocument,
-        new JwtCredentialValidationOptions(),
-        FailFast.FirstError,
-    );
-    // console.log("credentialjwt validation", res.intoCredential());
-
-    console.log("Issue VC sucessfully!");
-    
-    sendData(["issueVC", credentialJwt.toString()], ws);
-    // return credentialJwt.toString();
+        console.log("Issue VC sucessfully!");
+        
+        sendData(["issueVC", credentialJwt.toString()], ws);
+        // return credentialJwt.toString();
+    } catch {
+        sendData(["issueVC", "ERROR"], ws);
+    }
 }
 
 // // ================ SAMPLE USAGE ===================
