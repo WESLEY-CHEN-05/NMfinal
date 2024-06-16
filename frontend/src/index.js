@@ -6,9 +6,11 @@ import { PageProvider } from './hooks/usePage';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import { WebsiteProvider } from './hooks/WebsiteContext';
 
+const port = 5001;
+
 // Create an Apollo Client instance
 const client = new ApolloClient({
-  uri: 'http://localhost:5000/graphql', // Your GraphQL endpoint
+  uri: `http://localhost:${port}/graphql`, // Your GraphQL endpoint
   cache: new InMemoryCache(),
 });
 
