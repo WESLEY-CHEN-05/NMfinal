@@ -57,6 +57,7 @@ export default function BasicModal({ issuerDID, subjectDID, name, licenseNumber,
     const info = {
       issuerDID: data.get("issuerDIDid"),
       subjectDID: data.get("subjectDIDid"),
+      jwkPrivateKey: data.get("JwtKey"),
       subjectInfo: {
         name: data.get("name"),
         licenseNumber: data.get("licenseNumber"),
