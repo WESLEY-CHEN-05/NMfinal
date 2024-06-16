@@ -9,53 +9,48 @@ import { GET_DRIVERS } from "../graphql/query";
 import { useState, useEffect } from 'react';
 import { useQuery } from "@apollo/client";
 
-const columns = [
-  { field: 'DIDid', headerName: 'DID', width: 100 },
-  {
-    field: 'name',
-    headerName: 'name',
-    width: 120,
-  },
-  {
-    field: 'time',
-    headerName: 'issued time',
-    type: 'date',
-    width: 120,
-  },
-  {
-    field: 'issued',
-    headerName: 'Issue',
-    renderCell: (params) => (
-      <IssueButton
-        issuerDID={'did1'}
-        subjectDID={params.row.DIDid}
-        name={params.row.name}
-        age={params.row.age}
-        time={params.row.time}
-      ></IssueButton>
-    ),
-  },
-];
-
-
 export default function DriverData() {
-  const { theme } = usePage();
+  const { theme, userDID } = usePage();
+  const [columns, setColumns] = useState([])
   const [rows, setRows] = useState([]);
   const { loading, error, data } = useQuery(GET_DRIVERS);
+
+  useEffect(() => {
+    setColumns([
+      { field: 'name', headerName: 'Name',  width: 80 },
+      { field: 'DIDid', headerName: 'DID', width: 200 },
+      { field: 'licenseNumber', headerName: 'License Number', width: 120 },
+      { field: 'dueDate', headerName: 'License Due Date', width: 140 },
+      { field: 'email', headerName: 'Email', width: 180 },
+      { field: 'issued', headerName: 'Issue VC',
+        renderCell: (params) => (
+          <IssueButton
+            subjectDID={params.row.DIDid}
+            name={params.row.name}
+            licenseNumber={params.row.licenseNumber}
+            dueDate={params.row.dueDate}
+            email={params.row.email}
+          ></IssueButton>
+        ),
+      },
+    ]);
+  }, [userDID])
+
   useEffect(() => {
     if (!data) return
     const newRows = data.getDrivers.map((driver, id) => ({
       id,
       DIDid: driver.DIDid,
-      name: driver.lastName + driver.firstName,
-      time: new Date(2013, 6, 7)
+      name: driver.name,
+      licenseNumber: driver.licenseNumber,
+      dueDate: driver.dueDate,
+      email: driver.email
     }))
     setRows(newRows);
     console.log(data.getDrivers);
   }, [data]);
   if (loading) return 'Loading...';
   if (error) return `Error! ${error.message}`;
-  
   
   return (
     <ThemeProvider theme={theme}>

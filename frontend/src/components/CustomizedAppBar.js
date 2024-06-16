@@ -21,11 +21,11 @@ const CustomizedAppBar = () => {
             }}
           />
         </Box>
+        <Account></Account>
         <IconButton onClick={() => navigate('/')} color="inherit" aria-label="home">
           <HomeIcon />
         </IconButton>
         <ModeSwitch />
-        <Account></Account>
       </Toolbar>
     </AppBar>
   )

@@ -4,54 +4,21 @@ export const GET_DRIVERS = gql`
   query getDrivers{
     getDrivers {
       DIDid
-      firstName
-      lastName
+      name
+      licenseNumber
+      dueDate
       email
     }
   }
 `;
 
-export const GET_DRIVER_BY_EMAIL = gql`
-    query getDriverByEmail($email: String!) {
-        getDriverByEmail(email: $email) {
+export const GET_DRIVER_BY_DID = gql`
+    query getDriverByDID($DIDid: String!) {
+        getDriverByDID(DIDid: $DIDid) {
             DIDid
-            firstName
-            lastName
-            email
-            password
-            signedIn
-        }
-    }
-`;
-export const GET_ISSUER_BY_EMAIL = gql`
-    query getIssuerByEmail($email: String!) {
-        getIssuerByEmail(email: $email) {
-            DIDid
-            firstName
-            lastName
-            email
-            password
-            signedIn
-        }
-    }
-`;
-export const GET_PASSENGER_BY_EMAIL = gql`
-    query getPassengerByEmail($email: ID!) {
-        getPassengerByEmail(email: $email) {
-            firstName
-            lastName
-            email
-            password
-            signedIn
-        }
-    }
-`;
-
-export const GET_DRIVER = gql`
-    query getDriver($DIDid:String!){
-        driver(DIDid:$ID){
             name
-            signedIn
+            licenseNumber
+            dueDate
             email
         }
     }

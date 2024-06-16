@@ -6,9 +6,9 @@ const PageProvider = (props) => {
   const [theme, setTheme] = useState(lightTheme);
   const [themeMode, setThemeMode] = useState(localStorage.getItem('theme mode'));
   const [userName, setUserName] = useState(localStorage.getItem('userName') || '');
-  const [userID, setUserID] = useState(localStorage.getItem('userID') || '');
+  const [userDID, setUserDID] = useState(localStorage.getItem('userDID') || '');
+  const [userKey, setUserKey] = useState(localStorage.getItem('userKey') || '');
   const [userEmail, setUserEmail] = useState('');
-  const [identity, setIdentity] = useState('guest');
   const [signedIn, setSignedIn] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -22,11 +22,11 @@ const PageProvider = (props) => {
         value={{
           theme, themeMode, setThemeMode,
           userName, setUserName, 
-          userID, setUserID, 
+          userDID, setUserDID,
+          userKey, setUserKey,
           userEmail, setUserEmail, 
           signedIn, setSignedIn, 
           open, setOpen,
-          identity, setIdentity,
         }}
         {...props}
     ></PageContext.Provider>

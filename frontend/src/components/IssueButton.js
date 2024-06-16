@@ -1,11 +1,6 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
-import Snackbar from '@mui/material/Snackbar';
-import Alert from '@mui/material/Alert';
+import { useState, useEffect} from "react";
+import { Box, Button, TextField, Typography, Modal, Snackbar, Alert, Grid } from '@mui/material'
 import { usePage } from '../hooks/usePage';
 import { useBackend } from '../hooks/useBackend';
 import { v4 as uuidv4 } from 'uuid';
@@ -16,7 +11,9 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 400,
+  display: 'flex',
+  justifyContent:'center',
+  width: '500px',
   bgcolor: 'background.paper',
   boxShadow: 24,
   p: 4,
@@ -24,30 +21,31 @@ const style = {
   outline: 'none', // 移除預設框線
 };
 
-export default function BasicModal({ issuerDID, subjectDID, name }) {
-  const [open, setOpen] = React.useState(false);
-  const [passengerOpen, setPassengerOpen] = React.useState(false);
-  const [jwtKeyID, setJwtKeyID] = React.useState('');
-  const [openSnackbar, setOpenSnackbar] = React.useState(false);
+export default function BasicModal({ issuerDID, subjectDID, name, licenseNumber, dueDate, email }) {
+  const { userDID, userKey } = usePage();
+  const [open, setOpen] = useState(false);
+  const [passengerOpen, setPassengerOpen] = useState(false);
+  const [jwtKeyID, setJwtKeyID] = useState('');
+  const [openSnackbar, setOpenSnackbar] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const handlePassengerOpen = () => setPassengerOpen(true);
 
 
-  const { issueVC, sendNonce, challenge } = useBackend();
+  const { issueVC, challenge } = useBackend();
   const { credentialJwt, presentationJwt, nonce, setNonce } = useWebsite();
   
 
-  const { identity } = usePage();
-
-  const handleIssue = () => {
+  const handleIssue = (event) => {
     console.log(`Issuer: ${issuerDID}, Subject: ${subjectDID}, Name: ${name}, JwtKeyID: ${jwtKeyID}`);
-    // issueVC(issuerDID, subjectDID, name, jwtKeyID);
+    event.preventDefault();
     const _issuerDID = "did:iota:tst:0xfda28bbf862c9efcb67d16ca980b3703d3eee827e82d52d6a977a545ecb2ef5f";
     const _subjectDID = "did:iota:tst:0xae010b9df3261a233ac572246ca98bd098f415cd1b9611129606f17a0111f62e";
     const _privateKey = "paL-Ja24J4py_-xzvXXS3mVu53fJSc9VZPSViOTU-p8";
     const _name = "Wesley Chen";
-    issueVC(_issuerDID, _subjectDID, _name, _privateKey);
+    const data = new FormData(event.currentTarget);
+    const info = Object.fromEntries(data.entries());
+    console.log(info);
+    //issueVC(info);
     setOpen(false);
   };
 
@@ -69,42 +67,29 @@ export default function BasicModal({ issuerDID, subjectDID, name }) {
   };
 
 
-  // React.useEffect(() => {
-  //   console.log("Nonce:", nonce);
-  //   if (identity !== "issuer") setDriverOpen(true);
-  // }, [nonce]);
-
-  React.useEffect(() => {
+  useEffect(() => {
     console.log("Updated credentialJwt:", credentialJwt);
     if (credentialJwt !== "") setOpenSnackbar(true);
-    if (identity === "issuer");
     console.log(openSnackbar);
   }, [credentialJwt]);
 
   
-  React.useEffect(() => {
+  useEffect(() => {
     console.log("Updated presentationJwt:", presentationJwt);
     console.log(presentationJwt);
   }, [presentationJwt]);
-  // const handleCloseSnackbar = (event, reason) => {
-  //   if (reason === 'clickaway') {
-  //     return;
-  //   }
-  //   setOpenSnackbar(false);
-  // };
+  const handleCloseSnackbar = (event, reason) => {
+     if (reason === 'clickaway') {
+      return;
+     }
+     setOpenSnackbar(false);
+  };
 
   return (
     <div>
-      {identity === 'issuer' ? (
-        <Button variant="contained" style={{ backgroundColor: '#D2B48C', color: '#000' }} onClick={handleOpen}>
-          Issue
-        </Button>
-      ) : <></>}
-      {/* {identity === 'passenger' ? (
-        <Button variant="contained" style={{ backgroundColor: '#D2B48C', color: '#000' }} onClick={handlePassengerOpen}>
-          Verify
-        </Button>
-      ) : <></>} */}
+      <Button variant="contained" style={{ backgroundColor: '#D2B48C', color: '#000' }} onClick={handleOpen}>
+        Issue
+      </Button>
       <Modal
         open={open}
         onClose={handleClose}
@@ -112,63 +97,125 @@ export default function BasicModal({ issuerDID, subjectDID, name }) {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h5" component="h2" marginBottom={2} sx={{ fontWeight: 600 }}>
-            Issue Credential
-          </Typography>
-          <Typography id="modal-modal-title" variant="h6" component="h2" marginBottom={2} sx={{ fontSize: '18px', fontWeight: 400}}>
-            Issuer DID: {issuerDID}
-          </Typography>
-          <Typography id="modal-modal-title" variant="h6" component="h2" marginBottom={2} sx={{ fontSize: '18px', fontWeight: 400}}>
-            Subject DID: {subjectDID}
-          </Typography>
-          <Typography id="modal-modal-title" variant="h6" component="h2" marginBottom={3} sx={{ fontSize: '18px', fontWeight: 400}}>
-            Subject Name: {name}
-          </Typography>
-
-          { (identity === 'issuer') ?
-            <>
-              <TextField
-                label="JwtKey"
-                variant="outlined"
+          <Box component="form" noValidate onSubmit={handleIssue} sx={{ mt: 1, width: '80%' }}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <Typography variant="h5" component="h2" marginBottom={2} align='center' sx={{ fontWeight: 600 }}>
+                  Issue Credential
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="issuerDIDid"
+                  label="Issuer's DID id"
+                  name="issuerDIDid"
+                  defaultValue={userDID}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="JwtKey"
+                  label="JwtKey"
+                  name="JwtKey"
+                  defaultValue={userKey}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="body1" component="h2" marginBottom={2} >
+                  Subject's Info (read only):
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="subjectDIDid"
+                  label="DID id"
+                  name="subjectDIDid"
+                  defaultValue={subjectDID}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  name="name"
+                  required
+                  fullWidth
+                  id="name"
+                  label="Name"
+                  defaultValue={name}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  required
+                  fullWidth
+                  id="licenseNumber"
+                  label="license Number"
+                  name="licenseNumber"
+                  defaultValue={licenseNumber}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="dueDate"
+                  label="license Due Date"
+                  name="dueDate"
+                  defaultValue={dueDate}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  defaultValue={email}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                />
+              </Grid>
+              <Button
+                type="submit"
                 fullWidth
-                value={jwtKeyID}
-                onChange={(e) => setJwtKeyID(e.target.value)}
-                margin="normal"
-                style={{ marginBottom: '24px' }} // 增加更多空間
-              />
-              <Button variant="contained" color="secondary" onClick={handleIssue} fullWidth>
+                variant="contained"
+                sx={{ mt: 3, mb: 2 , bgcolor:'primary.main'}}
+              >
                 Issue
-              </Button> 
-            </>
-            :
-            <></>
-          }
-          {/* { (identity === 'driver') ?
-            <Button variant="contained" color="secondary" onClick={handleVP} fullWidth>
-              Generate VP
-            </Button> 
-            :
-            <></>
-          }
-          { (identity === 'passenger') ?
-            <Button variant="contained" color="secondary" onClick={handleVerify} fullWidth>
-              Verify
-            </Button> 
-            :
-            <></>
-          } */}
+              </Button>
+            </Grid>
+          </Box>
         </Box>
       </Modal>
-      {/* <Snackbar
+      <Snackbar
         open={openSnackbar}
         autoHideDuration={6000}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         onClose={handleCloseSnackbar}
       >
-        <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
-          驗證成功！
+        <Alert onClose={handleCloseSnackbar} severity="success" sx={{ position: 'fixed'}}>
+         Issue Successfully!
         </Alert>
-      </Snackbar> */}
+      </Snackbar>
     </div>
   );
 }

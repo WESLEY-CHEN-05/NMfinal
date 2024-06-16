@@ -29,13 +29,7 @@ const useBackend = () => {
         await sendData(["challenge", argument]);
     };
 
-    const issueVC = (issuerDID, subjectDID, subjectName, jwkPrivateKey) => {
-        const argument = {
-            issuerDID,
-            subjectDID, 
-            subjectName,
-            jwkPrivateKey,
-        }
+    const issueVC = (argument) => {
         console.log(argument);
         sendData(["issueVC", argument]);
     };
