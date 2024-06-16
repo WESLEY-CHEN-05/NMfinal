@@ -6,11 +6,10 @@ type User {
 }
 type Driver {
   DIDid: ID!
-  firstName: String!
-  lastName: String!
+  name: String!
+  licenseNumber: String!
+  dueDate: String!
   email: String!
-  password: String!
-  signedIn: Boolean!
 }
 
 type Issuer {
@@ -32,14 +31,11 @@ type Passenger {
 
 type Query {
   getDrivers: [Driver!]!
-  getDriver(DIDid: ID!): Driver
-  getDriverByEmail(email: String!): Driver
-  getPassengerByEmail(email: ID!): Passenger
-  getIssuerByEmail(email: String!): Issuer
+  getDriverByDID(DIDid: ID!): Driver
 }
 
 type Mutation {
-  addDriver(firstName: String!, lastName: String!, DIDid: ID!, email:String!, password:String!): Driver
+  addDriver(DIDid: ID!, name: String!, licenseNumber: String!, dueDate: String!, email: String!): Driver
   addIssuer(firstName: String!, lastName: String!, DIDid: ID!, email:String!, password:String!): Issuer
   addPassenger(firstName: String!, lastName: String!, email:ID!, password:String!): Passenger
   updateSignedIn(identity: String!, state:Boolean!, email:String!, password:String!): User

@@ -17,28 +17,39 @@ export default function DriverData() {
   const { loading, error, data } = useQuery(GET_DRIVERS);
   useEffect(() => {
     setColumns([
-      { field: 'DIDid', headerName: 'DID', width: 100 },
       {
         field: 'name',
-        headerName: 'name',
+        headerName: 'Name',
+        width: 80,
+      },
+      { field: 'DIDid', 
+        headerName: 'DID', 
+        width: 200 },
+      {
+        field: 'licenseNumber',
+        headerName: 'License Number',
         width: 120,
       },
       {
-        field: 'time',
-        headerName: 'issued time',
-        type: 'date',
-        width: 120,
+        field: 'dueDate',
+        headerName: 'License Due Date',
+        width: 140,
+      },
+      {
+        field: 'email',
+        headerName: 'Email',
+        width: 180,
       },
       {
         field: 'issued',
-        headerName: 'Issue',
+        headerName: 'Issue VC',
         renderCell: (params) => (
           <IssueButton
-            issuerDID={userDID}
             subjectDID={params.row.DIDid}
             name={params.row.name}
-            age={params.row.age}
-            time={params.row.time}
+            licenseNumber={params.row.licenseNumber}
+            dueDate={params.row.dueDate}
+            email={params.row.email}
           ></IssueButton>
         ),
       },
@@ -49,8 +60,10 @@ export default function DriverData() {
     const newRows = data.getDrivers.map((driver, id) => ({
       id,
       DIDid: driver.DIDid,
-      name: driver.lastName + driver.firstName,
-      time: new Date(2024, 6, 12)
+      name: driver.name,
+      licenseNumber: driver.licenseNumber,
+      dueDate: driver.dueDate,
+      email: driver.email
     }))
     setRows(newRows);
     console.log(data.getDrivers);

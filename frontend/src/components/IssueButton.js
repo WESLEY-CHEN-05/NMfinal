@@ -1,11 +1,6 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
-import Snackbar from '@mui/material/Snackbar';
-import Alert from '@mui/material/Alert';
+import { useState, useEffect} from "react";
+import { Box, Button, TextField, Typography, Modal, Snackbar, Alert, Grid } from '@mui/material'
 import { usePage } from '../hooks/usePage';
 import { useBackend } from '../hooks/useBackend';
 import { v4 as uuidv4 } from 'uuid';
@@ -24,21 +19,19 @@ const style = {
   outline: 'none', // 移除預設框線
 };
 
-export default function BasicModal({ issuerDID, subjectDID, name }) {
-  const [open, setOpen] = React.useState(false);
-  const [passengerOpen, setPassengerOpen] = React.useState(false);
-  const [jwtKeyID, setJwtKeyID] = React.useState('');
-  const [openSnackbar, setOpenSnackbar] = React.useState(false);
+export default function BasicModal({ issuerDID, subjectDID, name, licenseNumber, dueDate, email }) {
+  const { userDID, userKey } = usePage();
+  const [open, setOpen] = useState(false);
+  const [passengerOpen, setPassengerOpen] = useState(false);
+  const [jwtKeyID, setJwtKeyID] = useState('');
+  const [openSnackbar, setOpenSnackbar] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const handlePassengerOpen = () => setPassengerOpen(true);
 
 
   const { issueVC, sendNonce, challenge } = useBackend();
   const { credentialJwt, presentationJwt, nonce, setNonce } = useWebsite();
   
-
-  const { identity } = usePage();
 
   const handleIssue = () => {
     console.log(`Issuer: ${issuerDID}, Subject: ${subjectDID}, Name: ${name}, JwtKeyID: ${jwtKeyID}`);
@@ -69,20 +62,14 @@ export default function BasicModal({ issuerDID, subjectDID, name }) {
   };
 
 
-  // React.useEffect(() => {
-  //   console.log("Nonce:", nonce);
-  //   if (identity !== "issuer") setDriverOpen(true);
-  // }, [nonce]);
-
-  React.useEffect(() => {
+  useEffect(() => {
     console.log("Updated credentialJwt:", credentialJwt);
     if (credentialJwt !== "") setOpenSnackbar(true);
-    if (identity === "issuer");
     console.log(openSnackbar);
   }, [credentialJwt]);
 
   
-  React.useEffect(() => {
+  useEffect(() => {
     console.log("Updated presentationJwt:", presentationJwt);
     console.log(presentationJwt);
   }, [presentationJwt]);
@@ -95,16 +82,9 @@ export default function BasicModal({ issuerDID, subjectDID, name }) {
 
   return (
     <div>
-      {identity === 'issuer' ? (
-        <Button variant="contained" style={{ backgroundColor: '#D2B48C', color: '#000' }} onClick={handleOpen}>
-          Issue
-        </Button>
-      ) : <></>}
-      {/* {identity === 'passenger' ? (
-        <Button variant="contained" style={{ backgroundColor: '#D2B48C', color: '#000' }} onClick={handlePassengerOpen}>
-          Verify
-        </Button>
-      ) : <></>} */}
+      <Button variant="contained" style={{ backgroundColor: '#D2B48C', color: '#000' }} onClick={handleOpen}>
+        Issue
+      </Button>
       <Modal
         open={open}
         onClose={handleClose}
@@ -112,6 +92,98 @@ export default function BasicModal({ issuerDID, subjectDID, name }) {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
+          <Box component="form" noValidate onSubmit={handleIssue} sx={{ mt: 1, width: '80%' }}>
+            <Grid item xs={12}>
+              <TextField
+                required
+                fullWidth
+                id="issuerDIDid"
+                label="Issuer's DID id"
+                name="issuerDIDid"
+                defaultValue={userDID}
+              />
+            </Grid>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <Typography variant="h4" component="h2" marginBottom={2} sx={{ fontWeight: 600 }}>
+                  Issue Credential
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="DIDid"
+                  label="Subject'sDID id"
+                  name="DIDid"
+                  defaultValue={subjectDID}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  name="name"
+                  required
+                  fullWidth
+                  id="name"
+                  label="Name"
+                  defaultValue={name}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="licenseNumber"
+                  label="license Number"
+                  name="licenseNumber"
+                  defaultValue={licenseNumber}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="dueDate"
+                  label="license Due Date"
+                  name="dueDate"
+                  defaultValue={dueDate}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  defaultValue={email}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                />
+              </Grid>
+            </Grid>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 , bgcolor:'primary.main'}}
+            >
+              Issue
+            </Button>
+          </Box>
           <Typography id="modal-modal-title" variant="h5" component="h2" marginBottom={2} sx={{ fontWeight: 600 }}>
             Issue Credential
           </Typography>
@@ -124,39 +196,18 @@ export default function BasicModal({ issuerDID, subjectDID, name }) {
           <Typography id="modal-modal-title" variant="h6" component="h2" marginBottom={3} sx={{ fontSize: '18px', fontWeight: 400}}>
             Subject Name: {name}
           </Typography>
-
-          { (identity === 'issuer') ?
-            <>
-              <TextField
-                label="JwtKey"
-                variant="outlined"
-                fullWidth
-                value={jwtKeyID}
-                onChange={(e) => setJwtKeyID(e.target.value)}
-                margin="normal"
-                style={{ marginBottom: '24px' }} // 增加更多空間
-              />
-              <Button variant="contained" color="secondary" onClick={handleIssue} fullWidth>
-                Issue
-              </Button> 
-            </>
-            :
-            <></>
-          }
-          {/* { (identity === 'driver') ?
-            <Button variant="contained" color="secondary" onClick={handleVP} fullWidth>
-              Generate VP
-            </Button> 
-            :
-            <></>
-          }
-          { (identity === 'passenger') ?
-            <Button variant="contained" color="secondary" onClick={handleVerify} fullWidth>
-              Verify
-            </Button> 
-            :
-            <></>
-          } */}
+          <TextField
+            label="JwtKey"
+            variant="outlined"
+            fullWidth
+            value={jwtKeyID}
+            onChange={(e) => setJwtKeyID(e.target.value)}
+            margin="normal"
+            style={{ marginBottom: '24px' }} // 增加更多空間
+          />
+          <Button variant="contained" color="secondary" onClick={handleIssue} fullWidth>
+            Issue
+          </Button> 
         </Box>
       </Modal>
       <Snackbar
