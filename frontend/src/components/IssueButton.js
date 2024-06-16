@@ -11,7 +11,9 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 400,
+  display: 'flex',
+  justifyContent:'center',
+  width: '500px',
   bgcolor: 'background.paper',
   boxShadow: 24,
   p: 4,
@@ -29,18 +31,21 @@ export default function BasicModal({ issuerDID, subjectDID, name, licenseNumber,
   const handleClose = () => setOpen(false);
 
 
-  const { issueVC, sendNonce, challenge } = useBackend();
+  const { issueVC, challenge } = useBackend();
   const { credentialJwt, presentationJwt, nonce, setNonce } = useWebsite();
   
 
-  const handleIssue = () => {
+  const handleIssue = (event) => {
     console.log(`Issuer: ${issuerDID}, Subject: ${subjectDID}, Name: ${name}, JwtKeyID: ${jwtKeyID}`);
-    // issueVC(issuerDID, subjectDID, name, jwtKeyID);
+    event.preventDefault();
     const _issuerDID = "did:iota:tst:0xfda28bbf862c9efcb67d16ca980b3703d3eee827e82d52d6a977a545ecb2ef5f";
     const _subjectDID = "did:iota:tst:0xae010b9df3261a233ac572246ca98bd098f415cd1b9611129606f17a0111f62e";
     const _privateKey = "paL-Ja24J4py_-xzvXXS3mVu53fJSc9VZPSViOTU-p8";
     const _name = "Wesley Chen";
-    issueVC(issuerDID, subjectDID, name, jwtKeyID);
+    const data = new FormData(event.currentTarget);
+    const info = Object.fromEntries(data.entries());
+    console.log(info);
+    //issueVC(info);
     setOpen(false);
   };
 
@@ -93,19 +98,9 @@ export default function BasicModal({ issuerDID, subjectDID, name, licenseNumber,
       >
         <Box sx={style}>
           <Box component="form" noValidate onSubmit={handleIssue} sx={{ mt: 1, width: '80%' }}>
-            <Grid item xs={12}>
-              <TextField
-                required
-                fullWidth
-                id="issuerDIDid"
-                label="Issuer's DID id"
-                name="issuerDIDid"
-                defaultValue={userDID}
-              />
-            </Grid>
             <Grid container spacing={2}>
               <Grid item xs={12}>
-                <Typography variant="h4" component="h2" marginBottom={2} sx={{ fontWeight: 600 }}>
+                <Typography variant="h5" component="h2" marginBottom={2} align='center' sx={{ fontWeight: 600 }}>
                   Issue Credential
                 </Typography>
               </Grid>
@@ -113,9 +108,34 @@ export default function BasicModal({ issuerDID, subjectDID, name, licenseNumber,
                 <TextField
                   required
                   fullWidth
-                  id="DIDid"
-                  label="Subject'sDID id"
-                  name="DIDid"
+                  id="issuerDIDid"
+                  label="Issuer's DID id"
+                  name="issuerDIDid"
+                  defaultValue={userDID}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="JwtKey"
+                  label="JwtKey"
+                  name="JwtKey"
+                  defaultValue={userKey}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="body1" component="h2" marginBottom={2} >
+                  Subject's Info (read only):
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="subjectDIDid"
+                  label="DID id"
+                  name="subjectDIDid"
                   defaultValue={subjectDID}
                   InputProps={{
                     readOnly: true,
@@ -135,7 +155,7 @@ export default function BasicModal({ issuerDID, subjectDID, name, licenseNumber,
                   }}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} sm={6}>
                 <TextField
                   required
                   fullWidth
@@ -174,40 +194,16 @@ export default function BasicModal({ issuerDID, subjectDID, name, licenseNumber,
                   }}
                 />
               </Grid>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 , bgcolor:'primary.main'}}
+              >
+                Issue
+              </Button>
             </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 , bgcolor:'primary.main'}}
-            >
-              Issue
-            </Button>
           </Box>
-          <Typography id="modal-modal-title" variant="h5" component="h2" marginBottom={2} sx={{ fontWeight: 600 }}>
-            Issue Credential
-          </Typography>
-          <Typography id="modal-modal-title" variant="h6" component="h2" marginBottom={2} sx={{ fontSize: '18px', fontWeight: 400, wordWrap: 'break-word'}}>
-            Issuer DID: {issuerDID}
-          </Typography>
-          <Typography id="modal-modal-title" variant="h6" component="h2" marginBottom={2} sx={{ fontSize: '18px', fontWeight: 400, wordWrap: 'break-word'}}>
-            Subject DID: {subjectDID}
-          </Typography>
-          <Typography id="modal-modal-title" variant="h6" component="h2" marginBottom={3} sx={{ fontSize: '18px', fontWeight: 400}}>
-            Subject Name: {name}
-          </Typography>
-          <TextField
-            label="JwtKey"
-            variant="outlined"
-            fullWidth
-            value={jwtKeyID}
-            onChange={(e) => setJwtKeyID(e.target.value)}
-            margin="normal"
-            style={{ marginBottom: '24px' }} // 增加更多空間
-          />
-          <Button variant="contained" color="secondary" onClick={handleIssue} fullWidth>
-            Issue
-          </Button> 
         </Box>
       </Modal>
       <Snackbar

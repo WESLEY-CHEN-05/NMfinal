@@ -52,10 +52,7 @@ export default function ApplicationForm() {
       setWrong(true);
       console.error(err);
     }
-  };
-
-  
-  
+  };  
 
   return (
     <ThemeProvider theme={theme}>

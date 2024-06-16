@@ -9,40 +9,20 @@ import { GET_DRIVERS } from "../graphql/query";
 import { useState, useEffect } from 'react';
 import { useQuery } from "@apollo/client";
 
-
 export default function DriverData() {
   const { theme, userDID } = usePage();
   const [columns, setColumns] = useState([])
   const [rows, setRows] = useState([]);
   const { loading, error, data } = useQuery(GET_DRIVERS);
+
   useEffect(() => {
     setColumns([
-      {
-        field: 'name',
-        headerName: 'Name',
-        width: 80,
-      },
-      { field: 'DIDid', 
-        headerName: 'DID', 
-        width: 200 },
-      {
-        field: 'licenseNumber',
-        headerName: 'License Number',
-        width: 120,
-      },
-      {
-        field: 'dueDate',
-        headerName: 'License Due Date',
-        width: 140,
-      },
-      {
-        field: 'email',
-        headerName: 'Email',
-        width: 180,
-      },
-      {
-        field: 'issued',
-        headerName: 'Issue VC',
+      { field: 'name', headerName: 'Name',  width: 80 },
+      { field: 'DIDid', headerName: 'DID', width: 200 },
+      { field: 'licenseNumber', headerName: 'License Number', width: 120 },
+      { field: 'dueDate', headerName: 'License Due Date', width: 140 },
+      { field: 'email', headerName: 'Email', width: 180 },
+      { field: 'issued', headerName: 'Issue VC',
         renderCell: (params) => (
           <IssueButton
             subjectDID={params.row.DIDid}
@@ -55,6 +35,7 @@ export default function DriverData() {
       },
     ]);
   }, [userDID])
+
   useEffect(() => {
     if (!data) return
     const newRows = data.getDrivers.map((driver, id) => ({
@@ -70,7 +51,6 @@ export default function DriverData() {
   }, [data]);
   if (loading) return 'Loading...';
   if (error) return `Error! ${error.message}`;
-  
   
   return (
     <ThemeProvider theme={theme}>
