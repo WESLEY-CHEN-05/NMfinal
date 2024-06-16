@@ -67,6 +67,9 @@ export default function DriverData() {
   const [warningDialog, setWarningDialog] = React.useState(false);
   const [driverIsComing, setDriverIsComing] = React.useState(false);
 
+  const [receivedVP, setReceivedVP] = React.useState('');
+  const [receivedFileName, setReceivedFileName] = React.useState('');
+
   const { presentationJwt, nonce, setNonce, VPValid } = useWebsite();
 
 //   const handleClickOpen = () => {
@@ -124,6 +127,20 @@ export default function DriverData() {
     navigator.clipboard.writeText(nonce);
   };
 
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    setReceivedFileName(file.name); 
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      // remove " "
+      setReceivedVP(e.target.result.slice(1, -1));
+    };
+    reader.onerror = (e) => {
+      console.error("Error reading file:", e);
+    };
+    reader.readAsText(file);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -161,13 +178,24 @@ export default function DriverData() {
                 <Typography variant="body1" style={{ fontSize: '1.2rem' }}>Nonce (send to the driver):</Typography>
                 <Button 
                     onClick={copyToClipboard} 
-                    color="primary" 
+                    color="secondary" 
                     variant="contained"
                     size="small"
                     sx={{ marginLeft: 2 }}
                 >
                     Copy
                 </Button>
+            </Box>
+
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 2 }}>
+              <Typography variant="body1" style={{ fontSize: '1.2rem' }}>Received VP:</Typography>
+              <Button variant="contained" component="label" color="secondary" size="small" sx={{ marginLeft: 2 }}>
+                Upload JSON
+                <input type="file" hidden accept=".json" onChange={handleFileUpload} />
+              </Button>
+              <Typography variant="body2" sx={{ marginLeft: 2 }}>
+                {receivedFileName}
+              </Typography>
             </Box>
 
             <Typography

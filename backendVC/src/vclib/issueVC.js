@@ -34,7 +34,7 @@ export const issueVC = async (issuerDID, subjectDID, subjectInfo, jwkPrivateKey,
         const issuerDocument = await iotaResolution(issuerDID);
         if (!issuerDocument) throw new AnyError("Invalid DID for issuer.");
         const subjectDocument = await iotaResolution(subjectDID);
-        if (!subjectDocument) throw new AnyError("Invalid DID for issuer.");
+        if (!subjectDocument) throw new AnyError("Invalid DID for driver.");
 
         // Create a credential subject indicating the degree earned by Alice, linked to their DID.
         const subject = {
