@@ -4,8 +4,9 @@ import { readFileSync } from 'fs';
 import resolvers from './resolvers.js';
 import connectDB from './mongo.js'; // Import the database connection function
 import DriverModel from './model/Driver.js';
+import dotenv from 'dotenv-defaults';
 
-
+dotenv.config();
 // Initialize the database connection
 connectDB();
 
@@ -23,8 +24,9 @@ const yoga = createYoga({
 
 // Pass it into a server to hook into request handlers.
 const server = createServer(yoga)
+const port = process.env.PORT || 5000;
  
 // Start the server and you're done!
-server.listen(5000, () => {
-  console.info('Server is running on http://localhost:5000/graphql')
+server.listen(port, () => {
+  console.info(`Server is running on http://localhost:${port}/graphql`)
 })
