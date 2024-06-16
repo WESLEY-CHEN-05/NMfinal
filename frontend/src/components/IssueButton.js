@@ -91,7 +91,7 @@ export default function BasicModal({ issuerDID, subjectDID, name, licenseNumber,
 
   useEffect(() => {
     console.log("Updated credentialJwt:", credentialJwt);
-    if (credentialJwt === "ERROR") console.log("YOU FUCK UP");
+    if (credentialJwt.startsWith("ERROR")) console.log("YOU FUCK UP");
     else if (credentialJwt !== "") {
       const object = {
         credentialJwt,

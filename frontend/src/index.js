@@ -6,7 +6,8 @@ import { PageProvider } from './hooks/usePage';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import { WebsiteProvider } from './hooks/WebsiteContext';
 
-const port = 5000;
+const port = process.env.REACT_APP_MONGO_PORT || 5000;
+console.log("PORT", port);
 
 // Create an Apollo Client instance
 const client = new ApolloClient({
