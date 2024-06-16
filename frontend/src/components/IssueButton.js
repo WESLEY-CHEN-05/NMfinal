@@ -58,8 +58,13 @@ export default function BasicModal({ issuerDID, subjectDID, name, licenseNumber,
     const info = Object.fromEntries(data.entries());
     console.log("INFO", info);
 
-    console.log(info.issuerDIDid, info.subjectDIDid, info.name, info.JwtKey);
-    issueVC(info.issuerDIDid, info.subjectDIDid, info.name, info.JwtKey);
+    const otherInfo = {
+      name: info.name,
+      gender: "spice",
+    };
+
+    console.log(info.issuerDIDid, info.subjectDIDid, otherInfo, info.JwtKey);
+    issueVC(info.issuerDIDid, info.subjectDIDid, otherInfo, info.JwtKey);
 
     setOpen(false);
   };

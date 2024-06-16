@@ -21,7 +21,7 @@ const sendData = (data, ws) =>{
     // console.log('send data called in getFunc.');
 }
 
-export const issueVC = async (issuerDID, subjectDID, subjectName, jwkPrivateKey, ws) => {
+export const issueVC = async (issuerDID, subjectDID, subjectInfo, jwkPrivateKey, ws) => {
 
     try{
         const issuerDocument = await iotaResolution(issuerDID);
@@ -29,8 +29,8 @@ export const issueVC = async (issuerDID, subjectDID, subjectName, jwkPrivateKey,
 
         // Create a credential subject indicating the degree earned by Alice, linked to their DID.
         const subject = {
+            ...subjectInfo,
             id: subjectDocument.id(),
-            name: subjectName,
             license: "Certified Taxi Driver",
         };
 
@@ -41,6 +41,8 @@ export const issueVC = async (issuerDID, subjectDID, subjectName, jwkPrivateKey,
             issuer: issuerDocument.id(),
             credentialSubject: subject,
         });
+
+        console.log(unsignedVc);
 
         const issuerFragment = "key-1";
 

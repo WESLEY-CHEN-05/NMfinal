@@ -27,7 +27,7 @@ const onMessage =  async (wss, ws, e) => {
             }
             case 'issueVC':{
                 // console.log("TEST", payload.issuerDID, payload.subjectDID, payload.subjectName, payload.jwkPrivateKey);
-                issueVC(payload.issuerDID, payload.subjectDID, payload.subjectName, payload.jwkPrivateKey, ws);
+                issueVC(payload.issuerDID, payload.subjectDID, payload.subjectInfo, payload.jwkPrivateKey, ws);
                 break;
             }
             case 'validateDID':{
