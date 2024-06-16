@@ -30,13 +30,6 @@ const useBackend = () => {
     };
 
     const issueVC = (argument) => {
-        /*
-        argument = {
-            
-            JwtKey,
-            due
-        }
-        */
         sendData(["issueVC", argument]);
     };
 
