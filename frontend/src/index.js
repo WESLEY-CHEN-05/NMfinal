@@ -6,7 +6,7 @@ import { PageProvider } from './hooks/usePage';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import { WebsiteProvider } from './hooks/WebsiteContext';
 
-const port = 5001;
+const port = 5000;
 
 // Create an Apollo Client instance
 const client = new ApolloClient({

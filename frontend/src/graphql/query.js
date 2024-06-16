@@ -12,6 +12,18 @@ export const GET_DRIVERS = gql`
   }
 `;
 
+export const GET_RANDOM_DRIVER = gql`
+  query getRandomDriver{
+    getRandomDriver {
+      DIDid
+      name
+      licenseNumber
+      dueDate
+      email
+    }
+  }
+`;
+
 export const GET_DRIVER_BY_DID = gql`
     query getDriverByDID($DIDid: String!) {
         getDriverByDID(DIDid: $DIDid) {

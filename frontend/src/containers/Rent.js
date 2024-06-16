@@ -9,6 +9,7 @@ import IssueButton from '../components/IssueButton'
 import { v4 as uuidv4 } from 'uuid';
 import { useBackend } from '../hooks/useBackend';
 import { useWebsite } from '../hooks/WebsiteContext';
+import RandomDriver from '../components/RandomDriver';
 
 const columns = [
   { field: 'DIDid', headerName: 'ID', width: 90 },
@@ -152,10 +153,8 @@ export default function DriverData() {
           boxShadow: 10,
         }}>
           <CardContent>
-            <Typography variant="h5" gutterBottom style={{ fontSize: '2rem' }}>Driver Info</Typography>
-            <Typography variant="body1" style={{ fontSize: '1.2rem' }}>Name: {name}</Typography>
-            <Typography variant="body1" style={{ fontSize: '1.2rem' }}>Issuer: {issuer}</Typography>
-            <Typography variant="body1" style={{ fontSize: '1.2rem' }}>Issue Date: {issueDate}</Typography>
+            <RandomDriver></RandomDriver>
+            
 
             {/* nonce generation */}
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 2 }}>

@@ -31,6 +31,7 @@ type Passenger {
 
 type Query {
   getDrivers: [Driver!]!
+  getRandomDriver: Driver
   getDriverByDID(DIDid: ID!): Driver
 }
 

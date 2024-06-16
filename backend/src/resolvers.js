@@ -7,6 +7,12 @@ const saltRounds = 10;
 const resolvers = {
   Query: {
     getDrivers: async (_, args, {DriverModel}) => await DriverModel.find(),
+    getRandomDriver: async (_, args, {DriverModel}) => {
+      const drivers = await DriverModel.find();
+      const randomIndex = Math.floor(Math.random() * drivers.length);
+      console.log(drivers)
+      return drivers[randomIndex];
+    },
     getDriverByDID: async (_, { DIDid }, { DriverModel }) => {
       try {
         const driver = await DriverModel.findById(DIDid);
