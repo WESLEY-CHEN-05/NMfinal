@@ -11,6 +11,8 @@ const PageProvider = (props) => {
   const [userEmail, setUserEmail] = useState('');
   const [signedIn, setSignedIn] = useState(false);
   const [open, setOpen] = useState(false);
+  const [VC, setVC] = useState(localStorage.getItem('VC') ||'');
+  const [VCFileName, setVCFileName] = useState(localStorage.getItem('VCFileName') ||'');
 
   useEffect(() => {
     localStorage.setItem('theme mode', themeMode);
@@ -27,6 +29,8 @@ const PageProvider = (props) => {
           userEmail, setUserEmail, 
           signedIn, setSignedIn, 
           open, setOpen,
+          VC, setVC,
+          VCFileName, setVCFileName
         }}
         {...props}
     ></PageContext.Provider>
