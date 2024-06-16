@@ -15,6 +15,13 @@ const {
 
 import { iotaResolution } from './resolveDID.js';
 
+class AnyError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'ResolveError';
+    }
+}
+
 const sendData = (data, ws) =>{
     // console.log(JSON.stringify(data));
     ws.send(JSON.stringify(data));
@@ -25,7 +32,9 @@ export const issueVC = async (issuerDID, subjectDID, subjectInfo, jwkPrivateKey,
 
     try{
         const issuerDocument = await iotaResolution(issuerDID);
+        if (!issuerDocument) throw new AnyError("Invalid DID for issuer.");
         const subjectDocument = await iotaResolution(subjectDID);
+        if (!subjectDocument) throw new AnyError("Invalid DID for issuer.");
 
         // Create a credential subject indicating the degree earned by Alice, linked to their DID.
         const subject = {
@@ -86,8 +95,15 @@ export const issueVC = async (issuerDID, subjectDID, subjectInfo, jwkPrivateKey,
         
         sendData(["issueVC", credentialJwt.toString()], ws);
         // return credentialJwt.toString();
-    } catch {
-        sendData(["issueVC", "ERROR"], ws);
+    } catch (error) {
+        console.log("ERR", error);
+        if (error instanceof AnyError){
+            sendData(["issueVC", `ERROR: ${error.message}`], ws);
+        }
+        else {
+            sendData(["issueVC", `ERROR: Wrong Jwt Key.`], ws);
+        }
+        
     }
 }
 
