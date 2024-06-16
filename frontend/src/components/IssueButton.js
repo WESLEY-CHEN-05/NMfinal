@@ -24,8 +24,8 @@ const style = {
 export default function BasicModal({ issuerDID, subjectDID, name, licenseNumber, dueDate, email }) {
   const { userDID, userKey } = usePage();
   const [open, setOpen] = useState(false);
-  const [passengerOpen, setPassengerOpen] = useState(false);
-  const [jwtKeyID, setJwtKeyID] = useState('');
+  const [openError, setOpenError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -91,7 +91,10 @@ export default function BasicModal({ issuerDID, subjectDID, name, licenseNumber,
 
   useEffect(() => {
     console.log("Updated credentialJwt:", credentialJwt);
-    if (credentialJwt.startsWith("ERROR")) console.log("YOU FUCK UP");
+    if (credentialJwt.startsWith("ERROR")) {
+      setOpenError(true);
+      setErrorMessage(credentialJwt);
+    }
     else if (credentialJwt !== "") {
       const object = {
         credentialJwt,
@@ -244,6 +247,16 @@ export default function BasicModal({ issuerDID, subjectDID, name, licenseNumber,
       >
         <Alert onClose={handleCloseSnackbar} severity="success" sx={{ position: 'fixed', right: 0 }}>
          Successfully Issued! 
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={openError}
+        autoHideDuration={6000}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        onClose={() => setOpenError(false)}
+      >
+        <Alert onClose={() => setOpenError(false)} severity="error" sx={{ position: 'fixed', right: 0 }}>
+         {errorMessage}
         </Alert>
       </Snackbar>
     </div>
