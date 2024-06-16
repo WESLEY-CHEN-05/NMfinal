@@ -18,9 +18,9 @@ export default function DriverData() {
   useEffect(() => {
     setColumns([
       { field: 'name', headerName: 'Name',  width: 80 },
-      { field: 'DIDid', headerName: 'DID', width: 200 },
+      { field: 'DIDid', headerName: 'DID', width: 180 },
       { field: 'licenseNumber', headerName: 'License Number', width: 120 },
-      { field: 'dueDate', headerName: 'License Due Date', width: 140 },
+      { field: 'dueDate', headerName: 'License Due Date', width: 120 },
       { field: 'email', headerName: 'Email', width: 180 },
       { field: 'issued', headerName: 'Issue VC',
         renderCell: (params) => (

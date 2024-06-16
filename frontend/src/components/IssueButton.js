@@ -96,6 +96,7 @@ export default function BasicModal({ issuerDID, subjectDID, name, licenseNumber,
       const object = {
         credentialJwt,
       }
+      setOpenSnackbar(true);
       downloadJSON(credentialJwt, "credential.json");
     }
     setCredentialJwt("");
@@ -241,8 +242,8 @@ export default function BasicModal({ issuerDID, subjectDID, name, licenseNumber,
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         onClose={handleCloseSnackbar}
       >
-        <Alert onClose={handleCloseSnackbar} severity="success" sx={{ position: 'fixed'}}>
-         Issue Successfully!
+        <Alert onClose={handleCloseSnackbar} severity="success" sx={{ position: 'fixed', right: 0 }}>
+         Successfully Issued! 
         </Alert>
       </Snackbar>
     </div>
