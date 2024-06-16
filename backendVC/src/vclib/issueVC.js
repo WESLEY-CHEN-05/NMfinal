@@ -23,6 +23,8 @@ const sendData = (data, ws) =>{
 
 export const issueVC = async (issuerDID, subjectDID, subjectName, jwkPrivateKey, ws) => {
 
+    console.log("HELLO");
+
     const issuerDocument = await iotaResolution(issuerDID);
     const subjectDocument = await iotaResolution(subjectDID);
 

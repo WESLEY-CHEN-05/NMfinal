@@ -33,7 +33,7 @@ const WebsiteProvider = (props) => {
             }
             case "issueVC":{
                 console.log("ISSUED!!!");
-                setCredentialJwt(JSON.stringify(payload));
+                setCredentialJwt(payload);
                 break;
             }
             case "validateDID":{
@@ -55,7 +55,7 @@ const WebsiteProvider = (props) => {
     return (
         <WebsiteContext.Provider
             value={{
-                nonce, setNonce, credentialJwt, presentationJwt, didValid, VCValid, VPValid, 
+                nonce, setNonce, credentialJwt, setCredentialJwt, presentationJwt, setPresentationJwt, didValid, VCValid, VPValid, 
             }}
             {...props}
         />

@@ -32,7 +32,19 @@ export default function BasicModal({ issuerDID, subjectDID, name, licenseNumber,
 
 
   const { issueVC, challenge } = useBackend();
-  const { credentialJwt, presentationJwt, nonce, setNonce } = useWebsite();
+  const { credentialJwt, setCredentialJwt, presentationJwt, nonce, setNonce } = useWebsite();
+
+  const downloadJSON = (data, fileName) => {
+    const downdata = new Blob([JSON.stringify(data)], {type : 'application/json'});
+    const url = URL.createObjectURL(downdata);
+    const link = document.createElement('a');
+    link.href = url;
+    // link.download = `${fileName}.json`;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
   
 
   const handleIssue = (event) => {
@@ -44,40 +56,48 @@ export default function BasicModal({ issuerDID, subjectDID, name, licenseNumber,
     const _name = "Wesley Chen";
     const data = new FormData(event.currentTarget);
     const info = Object.fromEntries(data.entries());
-    console.log(info);
-    //issueVC(info);
+    console.log("INFO", info);
+
+    console.log(info.issuerDIDid, info.subjectDIDid, info.name, info.JwtKey);
+    issueVC(info.issuerDIDid, info.subjectDIDid, info.name, info.JwtKey);
+
     setOpen(false);
   };
 
-  const handleVP = () => {
-    const _nonce = uuidv4();
-    const _subjectDID = "did:iota:tst:0xae010b9df3261a233ac572246ca98bd098f415cd1b9611129606f17a0111f62e";
-    const _subjectPrivateKey = "Q3O9gmepFS6KAl5GpYs2CzZLeacfpZFdKU8JYPdf4Yg";
-    const _credentialJwtString = "eyJraWQiOiJkaWQ6aW90YTp0c3Q6MHhmZGEyOGJiZjg2MmM5ZWZjYjY3ZDE2Y2E5ODBiMzcwM2QzZWVlODI3ZTgyZDUyZDZhOTc3YTU0NWVjYjJlZjVmI2tleS0xIiwidHlwIjoiSldUIiwiYWxnIjoiRWREU0EifQ.eyJpc3MiOiJkaWQ6aW90YTp0c3Q6MHhmZGEyOGJiZjg2MmM5ZWZjYjY3ZDE2Y2E5ODBiMzcwM2QzZWVlODI3ZTgyZDUyZDZhOTc3YTU0NWVjYjJlZjVmIiwibmJmIjoxNzE4MDg5NDIyLCJqdGkiOiJodHRwczovL3d3dy50YWl3YW50YXhpLmNvbS50dy8iLCJzdWIiOiJkaWQ6aW90YTp0c3Q6MHhhZTAxMGI5ZGYzMjYxYTIzM2FjNTcyMjQ2Y2E5OGJkMDk4ZjQxNWNkMWI5NjExMTI5NjA2ZjE3YTAxMTFmNjJlIiwidmMiOnsiQGNvbnRleHQiOiJodHRwczovL3d3dy53My5vcmcvMjAxOC9jcmVkZW50aWFscy92MSIsInR5cGUiOlsiVmVyaWZpYWJsZUNyZWRlbnRpYWwiLCJUYXhpRHJpdmVyQ3JlZGVudGlhbCJdLCJjcmVkZW50aWFsU3ViamVjdCI6eyJsaWNlbnNlIjoiQ2VydGlmaWVkIFRheGkgRHJpdmVyIiwibmFtZSI6Ildlc2xleSBDaGVuIn19fQ.ib8RFBKr6Ydd_BM_25oJ_y42Rz1B0p63nQjL3xDP0EGnV7zqILThDax2VDUQT7CgctxDUUR1mFih4LA8BlFPCQ";
+  // const handleVP = () => {
+  //   const _nonce = uuidv4();
+  //   const _subjectDID = "did:iota:tst:0xae010b9df3261a233ac572246ca98bd098f415cd1b9611129606f17a0111f62e";
+  //   const _subjectPrivateKey = "Q3O9gmepFS6KAl5GpYs2CzZLeacfpZFdKU8JYPdf4Yg";
+  //   const _credentialJwtString = "eyJraWQiOiJkaWQ6aW90YTp0c3Q6MHhmZGEyOGJiZjg2MmM5ZWZjYjY3ZDE2Y2E5ODBiMzcwM2QzZWVlODI3ZTgyZDUyZDZhOTc3YTU0NWVjYjJlZjVmI2tleS0xIiwidHlwIjoiSldUIiwiYWxnIjoiRWREU0EifQ.eyJpc3MiOiJkaWQ6aW90YTp0c3Q6MHhmZGEyOGJiZjg2MmM5ZWZjYjY3ZDE2Y2E5ODBiMzcwM2QzZWVlODI3ZTgyZDUyZDZhOTc3YTU0NWVjYjJlZjVmIiwibmJmIjoxNzE4MDg5NDIyLCJqdGkiOiJodHRwczovL3d3dy50YWl3YW50YXhpLmNvbS50dy8iLCJzdWIiOiJkaWQ6aW90YTp0c3Q6MHhhZTAxMGI5ZGYzMjYxYTIzM2FjNTcyMjQ2Y2E5OGJkMDk4ZjQxNWNkMWI5NjExMTI5NjA2ZjE3YTAxMTFmNjJlIiwidmMiOnsiQGNvbnRleHQiOiJodHRwczovL3d3dy53My5vcmcvMjAxOC9jcmVkZW50aWFscy92MSIsInR5cGUiOlsiVmVyaWZpYWJsZUNyZWRlbnRpYWwiLCJUYXhpRHJpdmVyQ3JlZGVudGlhbCJdLCJjcmVkZW50aWFsU3ViamVjdCI6eyJsaWNlbnNlIjoiQ2VydGlmaWVkIFRheGkgRHJpdmVyIiwibmFtZSI6Ildlc2xleSBDaGVuIn19fQ.ib8RFBKr6Ydd_BM_25oJ_y42Rz1B0p63nQjL3xDP0EGnV7zqILThDax2VDUQT7CgctxDUUR1mFih4LA8BlFPCQ";
 
-    challenge(_nonce, _subjectDID, _subjectPrivateKey, _credentialJwtString);
-  }
+  //   challenge(_nonce, _subjectDID, _subjectPrivateKey, _credentialJwtString);
+  // }
 
-  const handleVerify = () => {
-    const _nonce = uuidv4();
-    const _subjectDID = "did:iota:tst:0xae010b9df3261a233ac572246ca98bd098f415cd1b9611129606f17a0111f62e";
-    setNonce(_nonce);
-    console.log(_nonce);
-    setPassengerOpen(false);
-  };
-
+  // const handleVerify = () => {
+  //   const _nonce = uuidv4();
+  //   const _subjectDID = "did:iota:tst:0xae010b9df3261a233ac572246ca98bd098f415cd1b9611129606f17a0111f62e";
+  //   setNonce(_nonce);
+  //   console.log(_nonce);
+  //   setPassengerOpen(false);
+  // };
 
   useEffect(() => {
     console.log("Updated credentialJwt:", credentialJwt);
-    if (credentialJwt !== "") setOpenSnackbar(true);
-    console.log(openSnackbar);
+    if (credentialJwt !== "") {
+      const object = {
+        credentialJwt,
+      }
+      downloadJSON(credentialJwt, "credential.json");
+    }
+    setCredentialJwt("");
   }, [credentialJwt]);
 
   
-  useEffect(() => {
-    console.log("Updated presentationJwt:", presentationJwt);
-    console.log(presentationJwt);
-  }, [presentationJwt]);
+  // useEffect(() => {
+  //   console.log("Updated presentationJwt:", presentationJwt);
+  //   console.log(presentationJwt);
+  // }, [presentationJwt]);
+
   const handleCloseSnackbar = (event, reason) => {
      if (reason === 'clickaway') {
       return;
