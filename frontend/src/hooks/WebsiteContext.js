@@ -55,7 +55,7 @@ const WebsiteProvider = (props) => {
     return (
         <WebsiteContext.Provider
             value={{
-                nonce, setNonce, credentialJwt, setCredentialJwt, presentationJwt, setPresentationJwt, didValid, VCValid, VPValid, 
+                nonce, setNonce, credentialJwt, setCredentialJwt, presentationJwt, setPresentationJwt, didValid, VCValid, VPValid, setVPValid, 
             }}
             {...props}
         />

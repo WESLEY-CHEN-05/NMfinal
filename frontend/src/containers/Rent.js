@@ -70,7 +70,7 @@ export default function DriverData() {
   const [receivedVP, setReceivedVP] = React.useState('');
   const [receivedFileName, setReceivedFileName] = React.useState('');
 
-  const { presentationJwt, nonce, setNonce, VPValid } = useWebsite();
+  const { presentationJwt, nonce, setNonce, VPValid, setVPValid } = useWebsite();
 
 //   const handleClickOpen = () => {
 //     setWarningDialog(true);
@@ -81,31 +81,21 @@ export default function DriverData() {
     setNonce(newNonce);
   }, [setNonce]);
 
+  const verifyVP = async () => {
+    setVerificationStatus('fail to verify');
+    validateVP(nonce, receivedVP);
+  };
+
   const handleClose = () => {
     setWarningDialog(false);
   };
 
-  const verifyVP = async () => {
-    // ============== TODO ====================
-    // const _nonce = "475a7984-1bb5-4c4c-a56f-822bccd46440";
-    const _subjectDID = "did:iota:tst:0xae010b9df3261a233ac572246ca98bd098f415cd1b9611129606f17a0111f62e";
-    const _subjectPrivateKey = "Q3O9gmepFS6KAl5GpYs2CzZLeacfpZFdKU8JYPdf4Yg";
-    const _credentialJwtString = "eyJraWQiOiJkaWQ6aW90YTp0c3Q6MHhmZGEyOGJiZjg2MmM5ZWZjYjY3ZDE2Y2E5ODBiMzcwM2QzZWVlODI3ZTgyZDUyZDZhOTc3YTU0NWVjYjJlZjVmI2tleS0xIiwidHlwIjoiSldUIiwiYWxnIjoiRWREU0EifQ.eyJpc3MiOiJkaWQ6aW90YTp0c3Q6MHhmZGEyOGJiZjg2MmM5ZWZjYjY3ZDE2Y2E5ODBiMzcwM2QzZWVlODI3ZTgyZDUyZDZhOTc3YTU0NWVjYjJlZjVmIiwibmJmIjoxNzE4MDg5NDIyLCJqdGkiOiJodHRwczovL3d3dy50YWl3YW50YXhpLmNvbS50dy8iLCJzdWIiOiJkaWQ6aW90YTp0c3Q6MHhhZTAxMGI5ZGYzMjYxYTIzM2FjNTcyMjQ2Y2E5OGJkMDk4ZjQxNWNkMWI5NjExMTI5NjA2ZjE3YTAxMTFmNjJlIiwidmMiOnsiQGNvbnRleHQiOiJodHRwczovL3d3dy53My5vcmcvMjAxOC9jcmVkZW50aWFscy92MSIsInR5cGUiOlsiVmVyaWZpYWJsZUNyZWRlbnRpYWwiLCJUYXhpRHJpdmVyQ3JlZGVudGlhbCJdLCJjcmVkZW50aWFsU3ViamVjdCI6eyJsaWNlbnNlIjoiQ2VydGlmaWVkIFRheGkgRHJpdmVyIiwibmFtZSI6Ildlc2xleSBDaGVuIn19fQ.ib8RFBKr6Ydd_BM_25oJ_y42Rz1B0p63nQjL3xDP0EGnV7zqILThDax2VDUQT7CgctxDUUR1mFih4LA8BlFPCQ";
-
-    // challenge(_nonce, _subjectDID, _subjectPrivateKey, _credentialJwtString);
-    
-    // if (check) setVerificationStatus('verified');
-    // else setVerificationStatus('fail to verify');
-  };
-
   React.useEffect(() => {
-    console.log("HIHI");
-    if (presentationJwt !== "") validateVP(nonce, presentationJwt);
-  }, [presentationJwt]);
-
-  React.useEffect(() => {
-    if (VPValid) setVerificationStatus('verified');
-  }, [VPValid])
+    if (VPValid){
+      setVerificationStatus('verified');
+      setVPValid(false);
+    }
+  }, [VPValid, setVPValid])
 
   const book = () => {
     if (verificationStatus !== 'verified') setWarningDialog(true);
@@ -130,6 +120,7 @@ export default function DriverData() {
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     setReceivedFileName(file.name); 
+    setVerificationStatus('unverified');
     const reader = new FileReader();
     reader.onload = (e) => {
       // remove " "
@@ -232,3 +223,17 @@ export default function DriverData() {
     </ThemeProvider>
   );
 }
+
+
+
+// JUNK
+// ============== TODO ====================
+// const _nonce = "475a7984-1bb5-4c4c-a56f-822bccd46440";
+// const _subjectDID = "did:iota:tst:0xae010b9df3261a233ac572246ca98bd098f415cd1b9611129606f17a0111f62e";
+// const _subjectPrivateKey = "Q3O9gmepFS6KAl5GpYs2CzZLeacfpZFdKU8JYPdf4Yg";
+// const _credentialJwtString = "eyJraWQiOiJkaWQ6aW90YTp0c3Q6MHhmZGEyOGJiZjg2MmM5ZWZjYjY3ZDE2Y2E5ODBiMzcwM2QzZWVlODI3ZTgyZDUyZDZhOTc3YTU0NWVjYjJlZjVmI2tleS0xIiwidHlwIjoiSldUIiwiYWxnIjoiRWREU0EifQ.eyJpc3MiOiJkaWQ6aW90YTp0c3Q6MHhmZGEyOGJiZjg2MmM5ZWZjYjY3ZDE2Y2E5ODBiMzcwM2QzZWVlODI3ZTgyZDUyZDZhOTc3YTU0NWVjYjJlZjVmIiwibmJmIjoxNzE4MDg5NDIyLCJqdGkiOiJodHRwczovL3d3dy50YWl3YW50YXhpLmNvbS50dy8iLCJzdWIiOiJkaWQ6aW90YTp0c3Q6MHhhZTAxMGI5ZGYzMjYxYTIzM2FjNTcyMjQ2Y2E5OGJkMDk4ZjQxNWNkMWI5NjExMTI5NjA2ZjE3YTAxMTFmNjJlIiwidmMiOnsiQGNvbnRleHQiOiJodHRwczovL3d3dy53My5vcmcvMjAxOC9jcmVkZW50aWFscy92MSIsInR5cGUiOlsiVmVyaWZpYWJsZUNyZWRlbnRpYWwiLCJUYXhpRHJpdmVyQ3JlZGVudGlhbCJdLCJjcmVkZW50aWFsU3ViamVjdCI6eyJsaWNlbnNlIjoiQ2VydGlmaWVkIFRheGkgRHJpdmVyIiwibmFtZSI6Ildlc2xleSBDaGVuIn19fQ.ib8RFBKr6Ydd_BM_25oJ_y42Rz1B0p63nQjL3xDP0EGnV7zqILThDax2VDUQT7CgctxDUUR1mFih4LA8BlFPCQ";
+
+// challenge(_nonce, _subjectDID, _subjectPrivateKey, _credentialJwtString);
+
+// if (check) setVerificationStatus('verified');
+// else setVerificationStatus('fail to verify');
