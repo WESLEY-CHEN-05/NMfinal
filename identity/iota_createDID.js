@@ -35,6 +35,7 @@ const clientOptions = {
 // stronghold configuration
 const strongholdPath = 'client.stronghold';
 const password = process.env.STRONGHOLD_PASSWORD;
+// console.log(password);
 
 // ============================================================================
 // Functions
@@ -71,11 +72,11 @@ try{
         },
         bech32Hrp: networkHrp,
     }))[0];
-    console.log(walletAddressBech32);
+    // console.log(walletAddressBech32);
     
     // request funds for testing.
+    await iotaClient.requestFundsFromFaucet(FAUCET_ENDPOINT, walletAddressBech32);
     // console.log(await iotaClient.requestFundsFromFaucet(FAUCET_ENDPOINT, walletAddressBech32));
-
 
     // Create DID
     const document = new IotaDocument(networkHrp);
