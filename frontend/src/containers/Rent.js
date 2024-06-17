@@ -166,7 +166,7 @@ export default function DriverData() {
 
             {/* nonce generation */}
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 2 }}>
-                <Typography variant="body1" style={{ fontSize: '1.2rem' }}>Nonce (send to the driver):</Typography>
+                <Typography variant="body1" sx={{ fontSize: '1.2rem', textAlign: "left" }}> {"Nonce (send to the driver):"}<br /> {nonce}</Typography>
                 <Button 
                     onClick={copyToClipboard} 
                     color="secondary" 
