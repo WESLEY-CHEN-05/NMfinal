@@ -35,7 +35,7 @@ Simply run following command (modify `***.js` to the scripts you want to run).
 ``` 
 node ***.js
 ```
-
+**Run following four scripts in order to obtain a DID!**
 #### mnemonic_generate.js
 Generate a mnemonic (can use to fill the `MNEMONIC` field in `.env`).
 
