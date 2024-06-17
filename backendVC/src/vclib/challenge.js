@@ -23,58 +23,76 @@ const sendData = (data, ws) =>{
 // The API endpoint of an IOTA node, e.g. Hornet.
 const API_ENDPOINT = "http://140.112.18.206:14265";
 
+class AnyError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'AnyError';
+    }
+}
+
 export const challenge = async (nonce, subjectDID, subjectPrivateKey, subjectJwtString, ws) => {
 
-    const subjectDocument = await iotaResolution(subjectDID);
-    const subjectFragment = "key-1";
+    try{
+        const subjectDocument = await iotaResolution(subjectDID);
+        if (!subjectDocument) throw new AnyError("Invalid DID for driver.");
+        const subjectFragment = "key-1";
 
-    // Create method Digest
-    const subjectMethodDigest = new MethodDigest(subjectDocument.methods()[0]);
+        // Create method Digest
+        const subjectMethodDigest = new MethodDigest(subjectDocument.methods()[0]);
 
-    const _subject_jwk_data = ((subjectDocument.methods()[0]).data().toJSON()).publicKeyJwk;
-    const subject_jwk_data = {
-        ..._subject_jwk_data,
-        d: subjectPrivateKey,
-    };
+        const _subject_jwk_data = ((subjectDocument.methods()[0]).data().toJSON()).publicKeyJwk;
+        const subject_jwk_data = {
+            ..._subject_jwk_data,
+            d: subjectPrivateKey,
+        };
 
-    // Create jwk object, JwkMemStore
-    const subjectJwk = new Jwk(subject_jwk_data);
-    const subjectJwkStore = new JwkMemStore();
-    const subjectKeyID = await subjectJwkStore.insert(subjectJwk);
+        // Create jwk object, JwkMemStore
+        const subjectJwk = new Jwk(subject_jwk_data);
+        const subjectJwkStore = new JwkMemStore();
+        const subjectKeyID = await subjectJwkStore.insert(subjectJwk);
 
-    // create KeyIDdMemStore
-    const subjectKeyIDStore = new KeyIdMemStore();
-    subjectKeyIDStore.insertKeyId(subjectMethodDigest, subjectKeyID);
+        // create KeyIDdMemStore
+        const subjectKeyIDStore = new KeyIdMemStore();
+        subjectKeyIDStore.insertKeyId(subjectMethodDigest, subjectKeyID);
 
-    // Create subject Storage
-    const subjectStorage = new Storage(subjectJwkStore, subjectKeyIDStore);
+        // Create subject Storage
+        const subjectStorage = new Storage(subjectJwkStore, subjectKeyIDStore);
 
-    // Set expire time
-    const expires = Timestamp.nowUTC().checkedAdd(Duration.minutes(10));
+        // Set expire time
+        const expires = Timestamp.nowUTC().checkedAdd(Duration.minutes(10));
 
-    // Create a Verifiable Presentation from the Credential
-    const credentialJwt = new Jwt(subjectJwtString);
-    const unsignedVp = new Presentation({
-        holder: subjectDocument.id(),
-        verifiableCredential: [credentialJwt],
-    });
+        // Create a Verifiable Presentation from the Credential
+        const credentialJwt = new Jwt(subjectJwtString);
+        const unsignedVp = new Presentation({
+            holder: subjectDocument.id(),
+            verifiableCredential: [credentialJwt],
+        });
 
-    // Create a JWT verifiable presentation using the holder's verification method
-    // and include the requested challenge and expiry timestamp.
-    const presentationJwt = await subjectDocument.createPresentationJwt(
-        subjectStorage,
-        subjectFragment,
-        unsignedVp,
-        new JwsSignatureOptions({ nonce }),
-        new JwtPresentationOptions({ expirationDate: expires }),
-    );
+        // Create a JWT verifiable presentation using the holder's verification method
+        // and include the requested challenge and expiry timestamp.
+        const presentationJwt = await subjectDocument.createPresentationJwt(
+            subjectStorage,
+            subjectFragment,
+            unsignedVp,
+            new JwsSignatureOptions({ nonce }),
+            new JwtPresentationOptions({ expirationDate: expires }),
+        );
 
-    // console.log(presentationJwt.toString());
-    
-    console.log("Challenge completed.");
-    
-    sendData(["challenge", presentationJwt.toString()], ws);
-    // return (presentationJwt.toString());
+        // console.log(presentationJwt.toString());
+        
+        console.log("Challenge completed.");
+        
+        sendData(["challenge", presentationJwt.toString()], ws);
+        // return (presentationJwt.toString());
+    } catch (error){
+        console.log("ERR", error);
+        if (error instanceof AnyError){
+            sendData(["challenge", `ERROR: ${error.message}`], ws);
+        }
+        else {
+            sendData(["challenge", `ERROR: Wrong Jwt Key.`], ws);
+        }
+    }
 }
 
 // // ================ SAMPLE USAGE ===================

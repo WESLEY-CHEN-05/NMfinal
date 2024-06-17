@@ -1,11 +1,13 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   Box, Typography, Button, Modal, IconButton, TextField, InputAdornment,
   Snackbar, Alert, Input,
   FormControl, InputLabel
 } from '@mui/material';
 import { usePage } from '../hooks/usePage';
+import { useBackend } from '../hooks/useBackend';
+import { useWebsite } from '../hooks/WebsiteContext';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import KeyIcon from '@mui/icons-material/Key';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
@@ -31,6 +33,9 @@ export default function Account() {
   const [errorMessage, setErrorMessage] = useState('');
   const [VPgenerated, setVPgenerated] = useState(false);
   const [formKey, setFormKey] = useState(Date.now());
+  const [nonce, setNonce] = useState('');
+  const { challenge } = useBackend();
+  const { presentationJwt, setPresentationJwt } = useWebsite();
 
 
   const handleOpen = () => {
@@ -74,8 +79,7 @@ export default function Account() {
         // remove " "
         setVC(e.target.result.slice(1, -1));
         localStorage.setItem("VC", e.target.result.slice(1, -1))
-        console.log(VC);
-        console.log(base64decoder(e.target.result.slice(1, -1)));
+        // console.log(base64decoder(e.target.result.slice(1, -1)));
       };
       reader.onerror = (e) => {
         console.error("Error reading file:", e);
@@ -83,18 +87,53 @@ export default function Account() {
       reader.readAsText(file);
     } 
   }
-  const downloadDIDDocument = () => {
-    if (!userDID || userDID === '') {
-      setError(true);
-      setErrorMessage("ERROR: DID id is empty!")
-    }
+  // const downloadDIDDocument = () => {
+  //   if (!userDID || userDID === '') {
+  //     setError(true);
+  //     setErrorMessage("ERROR: DID id is empty!")
+  //   }
+  // }
+
+  const downloadJSON = (data, fileName) => {
+    const downdata = new Blob([JSON.stringify(data)], {type : 'application/json'});
+    const url = URL.createObjectURL(downdata);
+    const link = document.createElement('a');
+    link.href = url;
+    // link.download = `${fileName}.json`;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 
   const generateVP = () => {
     if (!VC || VC === '') {
       setError(true);
-      setErrorMessage("ERROR: No VC file found!")
+      setErrorMessage("ERROR: No VC file found!");
     }
+    else if (!nonce || nonce === ''){
+      setError(true);
+      setErrorMessage("ERROR: No nonce is found!");
+    }
+    else{
+      challenge(nonce, userDID, userKey, VC);
+    }
+  }
+
+  useEffect(() => {
+    console.log("Updated presentationJwt:", presentationJwt);
+    if (presentationJwt.startsWith("ERROR")) {
+      setError(true);
+      setErrorMessage(presentationJwt);
+    }
+    else if (presentationJwt !== "") {
+      downloadJSON(presentationJwt, "presentation.json");
+    }
+    setPresentationJwt("");
+  }, [presentationJwt, setPresentationJwt]);
+
+  const handleNonce = (event) => {
+    setNonce(event.target.value);
   }
 
   return (
@@ -137,9 +176,9 @@ export default function Account() {
             variant="standard"
             sx={{my: 2, width: 280}}
           />
-          <Box sx={{display: 'flex', width: "100%"}}>  
+          {/* <Box sx={{display: 'flex', width: "100%"}}>  
             <Button color='primary' variant="contained" onClick={downloadDIDDocument} sx={{ width: "100%"}}>Download DID Document</Button>
-          </Box>
+          </Box> */}
           <TextField
             id="privateKey"
             label="private key"
@@ -175,6 +214,7 @@ export default function Account() {
                     variant="contained"
                     component="label"
                     size="small"
+                    sx={{marginBottom: 1}}
                   >
                     Upload
                     <input
@@ -187,6 +227,22 @@ export default function Account() {
               }
             />
           </FormControl>
+          <TextField
+            id="nonce"
+            label="nonce"
+            defaultValue={''}
+            name="nonce"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  {/* <KeyIcon /> */}
+                </InputAdornment>
+              )
+            }}
+            onChange={handleNonce}
+            variant="standard"
+            sx={{my: 2, width: 280}}
+          />
           <Box sx={{display: 'flex', width: "100%"}}>  
             <Button color='primary' variant="contained" onClick={generateVP} sx={{ width: "100%"}}>Generate VP from VC</Button>
           </Box>

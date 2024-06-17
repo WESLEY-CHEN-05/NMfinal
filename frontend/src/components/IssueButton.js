@@ -49,10 +49,10 @@ export default function BasicModal({ issuerDID, subjectDID, name, licenseNumber,
 
   const handleIssue = (event) => {
     event.preventDefault();
-    const _issuerDID = "did:iota:tst:0xfda28bbf862c9efcb67d16ca980b3703d3eee827e82d52d6a977a545ecb2ef5f";
-    const _subjectDID = "did:iota:tst:0xae010b9df3261a233ac572246ca98bd098f415cd1b9611129606f17a0111f62e";
-    const _privateKey = "paL-Ja24J4py_-xzvXXS3mVu53fJSc9VZPSViOTU-p8";
-    const _name = "Wesley Chen";
+    // const _issuerDID = "did:iota:tst:0xfda28bbf862c9efcb67d16ca980b3703d3eee827e82d52d6a977a545ecb2ef5f";
+    // const _subjectDID = "did:iota:tst:0xae010b9df3261a233ac572246ca98bd098f415cd1b9611129606f17a0111f62e";
+    // const _privateKey = "paL-Ja24J4py_-xzvXXS3mVu53fJSc9VZPSViOTU-p8";
+    // const _name = "Wesley Chen";
     const data = new FormData(event.currentTarget);
     const info = {
       issuerDID: data.get("issuerDIDid"),
@@ -96,9 +96,9 @@ export default function BasicModal({ issuerDID, subjectDID, name, licenseNumber,
       setErrorMessage(credentialJwt);
     }
     else if (credentialJwt !== "") {
-      const object = {
-        credentialJwt,
-      }
+      // const object = {
+      //   credentialJwt,
+      // }
       setOpenSnackbar(true);
       downloadJSON(credentialJwt, "credential.json");
     }

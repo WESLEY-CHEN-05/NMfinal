@@ -18,7 +18,7 @@ import { iotaResolution } from './resolveDID.js';
 class AnyError extends Error {
     constructor(message) {
         super(message);
-        this.name = 'ResolveError';
+        this.name = 'AnyError';
     }
 }
 
